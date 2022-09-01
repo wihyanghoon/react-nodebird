@@ -7,22 +7,22 @@ export const initialState = {
         },
         content: '첫번째 게실글 #해시태그 #익스프레스',
         Images: [{
-            src:"https://www.zerocho.com/book/1",
-        },{
-            src:"https://www.zerocho.com/book/2",
-        },{
-            src:"https://www.zerocho.com/book/3",
-        }],
+            src: 'https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726',
+          }, {
+            src: 'https://gimg.gilbut.co.kr/book/BN001958/rn_view_BN001958.jpg',
+          }, {
+            src: 'https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg',
+          }],
         Comments: [{
             User:{
                 nickname: 'nero',
             },
-            contetnt: '우와우와'
+            content: '우와우와'
         },{
             User:{
                 nickname: 'wi',
             },
-            contetnt: '힘내자'
+            content: '힘내자'
         }],
     }],
     imagePath:[],

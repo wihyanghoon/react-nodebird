@@ -18,7 +18,7 @@ const UserProfile = () => {
         <div key="fd">팔로윙<br />0</div>
       ]}
     >
-      <Card.Meta avatar={<Avatar>zc</Avatar>} title="향훈" />
+      <Card.Meta avatar={<Avatar>향</Avatar>} title="향훈" />
       <Button onClick={logaoutHandler}>로그아웃</Button>
     </Card>
   )
