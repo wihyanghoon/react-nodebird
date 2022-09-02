@@ -12,7 +12,7 @@ const PostImages = ({ images }) => {
   }, [])
 
   const onClose = useCallback(() => {
-
+    setShowImagesZopm(false)
   }, [])
 
   if (images.length === 1) {
