@@ -1,4 +1,4 @@
-import { all, frok, takeLatest } from "redux-saga/effects";
+import { all, fork, takeLatest } from "redux-saga/effects";
 
 function addPostAPI(data) {
     return axios.post('/api/addPost', data)
@@ -24,8 +24,8 @@ function* watchAddPost() {
     yield takeLatest('ADD_POST_REQUEST', addPost)
 }
 
-export default function* postSaga {
+export default function* postSaga() {
     yield all([
-        frok(watchAddPost)
+        fork(watchAddPost)
     ]);
 }
