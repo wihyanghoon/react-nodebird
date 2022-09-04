@@ -2,14 +2,15 @@ import React, { useCallback, useState } from 'react';
 import { Form, Input, Button } from 'antd';
 import Link from 'next/dist/client/link';
 import styled from 'styled-components'
-import { useDispatch } from 'react-redux';
-import { loginAction } from '../reducers/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginRequestAction } from '../reducers/user';
 
 const LoginForm = () => {
     const dispatch = useDispatch()
-
+    const { isLoggingIn } = useSelector((state) => state.user)
+    console.log(isLoggingIn)
     const [id, setId] = useState("")
-    console.log(id)
+
     const [password, setPassword] = useState("")
 
     const onChangeId = useCallback((e) => {
@@ -21,8 +22,7 @@ const LoginForm = () => {
     }, []);
 
     const onSubmitForm = useCallback(() => {
-        console.log(`id: ${id}, pw: ${password}`);
-        dispatch(loginAction({ id, password }))
+        dispatch(loginRequestAction({ id, password }))
     }, [id, password])
 
     return (
@@ -38,7 +38,7 @@ const LoginForm = () => {
                 <Input type="password" name='user-id' value={password} onChange={onChangePw} required />
             </div>
             <ButtonWrapper>
-                <Button type="primary" htmlType="submit" loading={false}>로그인</Button>
+                <Button type="primary" htmlType="submit" loading={isLoggingIn}>로그인</Button>
                 <Link href="/signup"><Button>회원가입</Button></Link>
             </ButtonWrapper>
         </Form>

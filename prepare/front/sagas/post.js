@@ -1,4 +1,4 @@
-import { all, fork, takeLatest } from "redux-saga/effects";
+import { delay, all, fork, takeLatest, put } from "redux-saga/effects";
 
 function addPostAPI(data) {
     return axios.post('/api/addPost', data)
@@ -7,7 +7,7 @@ function addPostAPI(data) {
 function* addPost(action) {
     try {
         // const result = yield call(addPostAPI, action.data)
-        delay(1000)
+        delay(1000);
         yield put({
             type: 'ADD_POST_SUCCESS',
             data: result.data
