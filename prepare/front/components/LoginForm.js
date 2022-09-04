@@ -7,14 +7,14 @@ import { loginRequestAction } from '../reducers/user';
 
 const LoginForm = () => {
     const dispatch = useDispatch()
-    const { isLoggingIn } = useSelector((state) => state.user)
-    console.log(isLoggingIn)
-    const [id, setId] = useState("")
+    const { logInLoading } = useSelector((state) => state.user)
+
+    const [email, setEmail] = useState("")
 
     const [password, setPassword] = useState("")
 
-    const onChangeId = useCallback((e) => {
-        setId(e.target.value);
+    const onChangeEmail = useCallback((e) => {
+        setEmail(e.target.value);
     }, []);
 
     const onChangePw = useCallback((e) => {
@@ -22,15 +22,15 @@ const LoginForm = () => {
     }, []);
 
     const onSubmitForm = useCallback(() => {
-        dispatch(loginRequestAction({ id, password }))
-    }, [id, password])
+        dispatch(loginRequestAction({ email, password }))
+    }, [email, password])
 
     return (
         <Form onFinish={onSubmitForm}>
             <div>
                 <label htmlFor="user-id">아이디</label>
                 <br />
-                <Input type="text" name='user-id' value={id} onChange={onChangeId} />
+                <Input type="text" name='user-id' value={email} onChange={onChangeEmail} />
             </div>
             <div>
                 <label htmlFor="user-id">비밀번호</label>
@@ -38,7 +38,7 @@ const LoginForm = () => {
                 <Input type="password" name='user-id' value={password} onChange={onChangePw} required />
             </div>
             <ButtonWrapper>
-                <Button type="primary" htmlType="submit" loading={isLoggingIn}>로그인</Button>
+                <Button type="primary" htmlType="submit" loading={logInLoading}>로그인</Button>
                 <Link href="/signup"><Button>회원가입</Button></Link>
             </ButtonWrapper>
         </Form>

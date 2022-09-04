@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import AppLayout from '../components/AppLayout';
 import useInput from '../hooks/useInput';
+import { useDispatch, useSelector } from 'react-redux';
 
 const TextInput = ({ value }) => {
   return (
@@ -16,12 +17,14 @@ TextInput.propTypes = {
 };
 
 const Signup = () => {
+  const dispatch = useDispatch();
+  const { SignupLoading } = useSelector((state) => state.user)
   const [passwordCheck, setPasswordCheck] = useState('');
   const [term, setTerm] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [termError, setTermError] = useState(false);
 
-  const [id, onChangeId] = useInput('');
+  const [email, onChangeEmail] = useInput('');
   const [nick, onChangeNick] = useInput('');
   const [password, onChangePassword] = useInput('');
 
@@ -32,7 +35,11 @@ const Signup = () => {
     if (!term) {
       return setTermError(true);
     }
-    console.log(id, nick, password)
+    console.log(email, nick, password)
+    dispatch({
+      type: SIGN_UP_REQUEST,
+      data: { email, nick, password }
+    })
   }, [password, passwordCheck, term]);
 
   const onChangePasswordCheck = useCallback((e) => {
@@ -50,9 +57,9 @@ const Signup = () => {
       <Form onFinish={onSubmit} style={{ padding: 10 }}>
         <TextInput />
         <div>
-          <label htmlFor="user-id">아이디</label>
+          <label htmlFor="user-email">아이디</label>
           <br />
-          <Input name="user-id" value={id} required onChange={onChangeId} />
+          <Input name="user-email" type='email' value={email} required onChange={onChangeEmail} />
         </div>
         <div>
           <label htmlFor="user-nick">닉네임</label>
@@ -81,7 +88,7 @@ const Signup = () => {
           {termError && <div style={{ color: 'red' }}>약관에 동의하셔야 합니다.</div>}
         </div>
         <div style={{ marginTop: 10 }}>
-          <Button type="primary" htmlType="submit">가입하기</Button>
+          <Button type="primary" htmlType="submit" loading={SignupLoading}>가입하기</Button>
         </div>
       </Form>
     </AppLayout>
