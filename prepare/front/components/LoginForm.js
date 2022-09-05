@@ -28,14 +28,14 @@ const LoginForm = () => {
     return (
         <Form onFinish={onSubmitForm}>
             <div>
-                <label htmlFor="user-id">아이디</label>
+                <label htmlFor="user-email">이메일</label>
                 <br />
-                <Input type="text" name='user-id' value={email} onChange={onChangeEmail} />
+                <Input type="email" name='user-email' value={email} onChange={onChangeEmail} />
             </div>
             <div>
-                <label htmlFor="user-id">비밀번호</label>
+                <label htmlFor="user-password">비밀번호</label>
                 <br />
-                <Input type="password" name='user-id' value={password} onChange={onChangePw} required />
+                <Input type="password" name='user-password' value={password} onChange={onChangePw} required />
             </div>
             <ButtonWrapper>
                 <Button type="primary" htmlType="submit" loading={logInLoading}>로그인</Button>

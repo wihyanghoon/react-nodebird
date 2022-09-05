@@ -8,6 +8,9 @@ export const initialState = {
     signUpLoading: false, // 회원가입 시도중
     signUpDone: false,
     signUpErr: null,
+    changeNickLoading: false, // 닉네임변경 시도중
+    changeNickDone: false,
+    changeNickErr: null,
     me: null,
     signUpData: {},
     loginData: {},
@@ -27,6 +30,10 @@ export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST'
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS'
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE'
 
+export const CHANGE_NICK_REQUEST = 'CHANGE_NICK_REQUEST'
+export const CHANGE_NICK_SUCCESS = 'CHANGE_NICK_SUCCESS'
+export const CHANGE_NICK_FAILURE = 'CHANGE_NICK_FAILURE'
+
 export const FOLLOW_REQUEST = 'FOLLOW_REQUEST'
 export const FOLLOW_SUCCESS = 'FOLLOW_SUCCESS'
 export const FOLLOW_FAILURE = 'FOLLOW_FAILURE'
@@ -34,6 +41,9 @@ export const FOLLOW_FAILURE = 'FOLLOW_FAILURE'
 export const UNFOLLOW_REQUEST = 'UNFOLLOW_REQUEST'
 export const UNFOLLOW_SUCCESS = 'UNFOLLOW_SUCCESS'
 export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE'
+
+export const ADD_POST_TO_ME = 'ADD_POST_TO_ME'
+export const REMOVE_POST_TO_ME = 'REMOVE_POST_TO_ME'
 
 //더미데이터
 
@@ -72,6 +82,8 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 logInLoading: true,
+                logInDone: false,
+                logInErr: null,
             }
         case LOG_IN_SUCCESS:
             return {
@@ -84,30 +96,34 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 logInLoading: false,
-                logInDone: false,
+                logInErr: action.error
             }
         case LOG_OUT_REQUEST:
             return {
                 ...state,
                 logOutLoading: true,
+                logOutDone: false,
+                logOutErr: null,
             }
         case LOG_OUT_SUCCESS:
             return {
                 ...state,
                 logOutLoading: false,
                 logOutDone: true,
-                logInDone: false,
                 me: null,
             }
         case LOG_OUT_FAILURE:
             return {
                 ...state,
+                logOutLoading: false,
                 logOutErr: action.error,
             }
         case SIGN_UP_REQUEST:
             return {
                 ...state,
                 signUpLoading: true,
+                signUpDone: false,
+                signUpErr: null,
             }
         case SIGN_UP_SUCCESS:
             return {
@@ -118,7 +134,43 @@ const reducer = (state = initialState, action) => {
         case SIGN_UP_FAILURE:
             return {
                 ...state,
+                signUpLoading: false,
                 signUpErr: action.error
+            }
+        case CHANGE_NICK_REQUEST:
+            return {
+                ...state,
+                changeNickLoading: true,
+                changeNickDone: false,
+                changeNickErr: null,
+            }
+        case CHANGE_NICK_SUCCESS:
+            return {
+                ...state,
+                changeNickLoading: false,
+                changeNickDone: true,
+            }
+        case CHANGE_NICK_FAILURE:
+            return {
+                ...state,
+                changeNickLoading: false,
+                changeNickErr: action.error
+            }
+        case ADD_POST_TO_ME:
+            return {
+                ...state,
+                me: {
+                    ...state.me,
+                    Posts: [{ id: action.data }, ...state.me.Posts],
+                }
+            }
+        case REMOVE_POST_TO_ME:
+            return {
+                ...state,
+                me: {
+                    ...state.me,
+                    Posts: state.me.Posts.filter((item) => item.id !== action.data)
+                }
             }
         default:
             return state
