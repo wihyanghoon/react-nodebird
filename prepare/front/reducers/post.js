@@ -1,4 +1,5 @@
 import shortId from 'shortid'
+import produce from 'immer'
 
 export const initialState = {
     mainPosts: [{
@@ -101,77 +102,61 @@ const dummyComment = (data) => (
 )
 
 const reducer = (state = initialState, action) => {
-    switch (action.type) {
-        case ADD_POST_REQUEST:
-            return {
-                ...state,
-                addPostLoadding: true,
-                addPostDone: false,
-                addPostErr: null,
-            }
-        case ADD_POST_SUCCESS:
-            return {
-                ...state,
-                addPostLoadding: false,
-                addPostDone: true,
-                mainPosts: [dummyPost(action.data), ...state.mainPosts]
-            }
-        case ADD_COMMENT_FAILURE:
-            return {
-                ...state,
-                addPostLoadding: false,
-                addPostErr: action.err,
-            }
-        case REMOVE_POST_REQUEST:
-            return {
-                ...state,
-                removePostLoadding: true,
-                removePostDone: false,
-                removePostErr: null,
-            }
-        case REMOVE_POST_SUCCESS:
-            return {
-                ...state,
-                removePostLoadding: false,
-                removePostDone: true,
-                mainPosts: state.mainPosts.filter((item) => item.id !== action.data)
-            }
-        case REMOVE_POST_FAILURE:
-            return {
-                ...state,
-                removePostLoadding: false,
-                removePostErr: action.err,
-            }
-        case ADD_COMMENT_REQUEST:
-            return {
-                ...state,
-                addComentLoadding: true,
-                addComentDone: false,
-                addComentErr: null,
-            }
-        case ADD_COMMENT_SUCCESS:
-            const postIndex = state.mainPosts.findIndex((item) => item.id === action.data.postId) // 보낸 개시물과 같은아이디 위치값 찾기
-            const post = { ...state.mainPosts[postIndex] } // 위치값
-            post.Comments = [dummyComment(action.data.content), ...post.Comments]// 해당 위치 코멘트
-            const mainPosts = [...state.mainPosts];
-            mainPosts[postIndex] = post;
+    return produce(state, (draft) => {
+        switch (action.type) {
+            case ADD_POST_REQUEST:
+                draft.addPostLoadding = true
+                draft.addPostDone = false
+                draft.addPostErr = null
 
-            return {
-                ...state,
-                addComentLoadding: false,
-                addCommentDone: true,
-                mainPosts,
-            }
-        case ADD_COMMENT_FAILURE:
-            return {
-                ...state,
-                addComentLoadding: false,
-                addComentErr: action.error,
-            }
-        default:
-            return state
-    }
+                break;
+            case ADD_POST_SUCCESS:
+                draft.addPostLoadding = false
+                draft.addPostDone = true
+                draft.mainPosts.unshift(dummyPost(action.data))
 
+                break;
+            case ADD_COMMENT_FAILURE:
+                draft.addPostLoadding = false
+                draft.addPostErr = action.err
+
+                break;
+            case REMOVE_POST_REQUEST:
+                draft.removePostLoadding = true
+                draft.removePostDone = false
+                draft.removePostErr = null
+                break;
+
+            case REMOVE_POST_SUCCESS:
+                draft.removePostLoadding = false
+                draft.removePostDone = true
+                draft.mainPosts = state.mainPosts.filter((item) => item.id !== action.data)
+                break;
+            case REMOVE_POST_FAILURE:
+                draft.removePostLoadding = false
+                draft.removePostErr = action.err
+                break;
+            case ADD_COMMENT_REQUEST:
+                draft.addComentLoadding = true
+                draft.addComentDone = false
+                draft.addComentErr = null
+                break;
+            case ADD_COMMENT_SUCCESS:
+                const post = draft.find((item) => item.id === action.data.postId)
+                post.Comments.unshift((dummyComment(action.data.content)))
+
+                draft.addComentLoadding = false
+                draft.addCommentDone = true
+                draft.mainPosts
+                break;
+            case ADD_COMMENT_FAILURE:
+                draft.addComentLoadding = false
+                draft.addComentErr = action.error
+
+            default:
+                return state
+        }
+    })
 }
 
 export default reducer

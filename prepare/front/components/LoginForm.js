@@ -23,7 +23,7 @@ const LoginForm = () => {
 
     const onSubmitForm = useCallback(() => {
         dispatch(loginRequestAction({ email, password }))
-    }, [])
+    }, [email, password])
 
     return (
         <Form onFinish={onSubmitForm}>

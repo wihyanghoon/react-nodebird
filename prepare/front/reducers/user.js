@@ -1,3 +1,5 @@
+import produce from 'immer'
+
 export const initialState = {
     logInLoading: false, // 로그인 시도중
     logInDone: false,
@@ -77,104 +79,71 @@ export const logoutRequestAction = (data) => {
 }
 
 const reducer = (state = initialState, action) => {
-    switch (action.type) {
-        case LOG_IN_REQUEST:
-            return {
-                ...state,
-                logInLoading: true,
-                logInDone: false,
-                logInErr: null,
-            }
-        case LOG_IN_SUCCESS:
-            return {
-                ...state,
-                logInLoading: false,
-                logInDone: true,
-                me: UserDummy(action.data)
-            }
-        case LOG_IN_FAILURE:
-            return {
-                ...state,
-                logInLoading: false,
-                logInErr: action.error
-            }
-        case LOG_OUT_REQUEST:
-            return {
-                ...state,
-                logOutLoading: true,
-                logOutDone: false,
-                logOutErr: null,
-            }
-        case LOG_OUT_SUCCESS:
-            return {
-                ...state,
-                logOutLoading: false,
-                logOutDone: true,
-                me: null,
-            }
-        case LOG_OUT_FAILURE:
-            return {
-                ...state,
-                logOutLoading: false,
-                logOutErr: action.error,
-            }
-        case SIGN_UP_REQUEST:
-            return {
-                ...state,
-                signUpLoading: true,
-                signUpDone: false,
-                signUpErr: null,
-            }
-        case SIGN_UP_SUCCESS:
-            return {
-                ...state,
-                signUpLoading: false,
-                signUpDone: true,
-            }
-        case SIGN_UP_FAILURE:
-            return {
-                ...state,
-                signUpLoading: false,
-                signUpErr: action.error
-            }
-        case CHANGE_NICK_REQUEST:
-            return {
-                ...state,
-                changeNickLoading: true,
-                changeNickDone: false,
-                changeNickErr: null,
-            }
-        case CHANGE_NICK_SUCCESS:
-            return {
-                ...state,
-                changeNickLoading: false,
-                changeNickDone: true,
-            }
-        case CHANGE_NICK_FAILURE:
-            return {
-                ...state,
-                changeNickLoading: false,
-                changeNickErr: action.error
-            }
-        case ADD_POST_TO_ME:
-            return {
-                ...state,
-                me: {
-                    ...state.me,
-                    Posts: [{ id: action.data }, ...state.me.Posts],
-                }
-            }
-        case REMOVE_POST_TO_ME:
-            return {
-                ...state,
-                me: {
-                    ...state.me,
-                    Posts: state.me.Posts.filter((item) => item.id !== action.data)
-                }
-            }
-        default:
-            return state
-    }
+    return produce(state, (draft) => {
+        switch (action.type) {
+            case LOG_IN_REQUEST:
+                draft.logInLoading = true
+                draft.logInDone = false
+                draft.logInErr = null
+                break;
+            case LOG_IN_SUCCESS:
+                draft.logInLoading = false
+                draft.logInDone = true
+                draft.me = UserDummy(action.data)
+                break;
+            case LOG_IN_FAILURE:
+                draft.logInLoading = false
+                draft.logInErr = action.error
+                break;
+            case LOG_OUT_REQUEST:
+                draft.logOutLoading = true
+                draft.logOutDone = false
+                draft.logOutErr = null
+                break;
+            case LOG_OUT_SUCCESS:
+                draft.logOutLoading = false
+                draft.logOutDone = true
+                draft.me = null
+                break;
+            case LOG_OUT_FAILURE:
+                draft.logOutLoading = false
+                draft.logOutErr = action.error
+            case SIGN_UP_REQUEST:
+                draft.signUpLoading = true
+                draft.signUpDone = false
+                draft.signUpErr = null
+                break;
+            case SIGN_UP_SUCCESS:
+                draft.signUpLoading = false
+                draft.signUpDone = true
+                break;
+            case SIGN_UP_FAILURE:
+                draft.signUpLoading = false
+                draft.signUpErr = action.error
+                break;
+            case CHANGE_NICK_REQUEST:
+                draft.changeNickLoading = true
+                draft.changeNickDone = false
+                draft.changeNickErr = null
+                break;
+            case CHANGE_NICK_SUCCESS:
+                draft.changeNickLoading = false
+                draft.changeNickDone = true
+                break;
+            case CHANGE_NICK_FAILURE:
+                draft.changeNickLoading = false
+                draft.changeNickErr = action.error
+                break;
+            case ADD_POST_TO_ME:
+                draft.me.Posts.unshift({ id: action.data })
+                break;
+            case REMOVE_POST_TO_ME:
+                draft.me.Posts.filter((item) => item.id !== action.data)
+                break;
+            default:
+                return state
+        }
+    })
 }
 
 export default reducer
