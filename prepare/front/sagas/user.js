@@ -17,7 +17,7 @@ function logInAPI() {
 }
 
 function* logIn(action) {
-    console.log('saga start')
+    console.log(action)
     try {
         yield delay(1000)
         // const result = yield call(logInAPI, action.data)
