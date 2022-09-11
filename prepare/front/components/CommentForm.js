@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addCommentAction } from '../reducers/post'
 
 const CommentForm = ({ post }) => {
-    const { addComentLoadding } = useSelector((state)=> state.post)
+    const { addCommentLoadding } = useSelector((state)=> state.post)
     const dispatch = useDispatch();
     const id = useSelector((state) => state.user.me?.id)
     const [commentText, onChangeCommentText] = useInput('')
@@ -21,7 +21,7 @@ const CommentForm = ({ post }) => {
         <Form onFinish={onSubmitComment}>
             <Form.Item style={{position:"relative", margin:0}}>
                 <Input.TextArea valuse={commentText} onChange={onChangeCommentText} rows={4}/>
-                <Button type="primary" htmlType='submit' style={{float:'right'}} loading={addComentLoadding}>삐약</Button>
+                <Button type="primary" htmlType='submit' style={{float:'right'}} loading={addCommentLoadding}>삐약</Button>
             </Form.Item>
         </Form>
     )

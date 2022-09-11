@@ -3,6 +3,7 @@ import {
     ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
     REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
     ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE,
+    LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE, getDemmuyPost
 } from '../reducers/post'
 
 import { ADD_POST_TO_ME, REMOVE_POST_TO_ME } from "../reducers/user";
@@ -65,7 +66,7 @@ function addCommentAPI(data) {
 function* addComment(action) {
     try {
         // const result = yield call(addPostAPI, action.data)
-        yield delay(4000)
+        yield delay(1000)
         yield put({
             type: ADD_COMMENT_SUCCESS,
             data: action.data
@@ -76,6 +77,30 @@ function* addComment(action) {
             data: err.response.data
         });
     }
+}
+
+function loadPostAPI(data) {
+    return axios.get('/api/addPost', data)
+}
+
+function* loadPost(action) {
+    try {
+        // const result = yield call(addPostAPI, action.data)
+        yield delay(1000)
+        yield put({
+            type: LOAD_POST_SUCCESS,
+            data: getDemmuyPost(10)
+        });
+    } catch (err) {
+        yield put({
+            type: LOAD_POST_FAILURE,
+            data: err.response.data
+        });
+    }
+}
+
+function* watchLoadPost() {
+    yield takeLatest(LOAD_POST_REQUEST, loadPost)
 }
 
 function* watchAddPost() {
@@ -96,5 +121,6 @@ export default function* postSaga() {
         fork(watchAddPost),
         fork(watchCommentPost),
         fork(watchRemovePost),
+        fork(watchLoadPost),
     ]);
 }
