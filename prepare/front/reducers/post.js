@@ -37,10 +37,10 @@ export const initialState = {
         }],
     }],
     imagePath: [],
-    hasMorePost : true,
-    getPostLoadding: false,
-    getPostDone: false,
-    getPostErr: null,
+    hasMorePosts: true,
+    loadPostsLoading: false,
+    loadPostsDone: false,
+    loadPostsError: null,
     addPostLoadding: false,
     addPostDone: false,
     addPostErr: null,
@@ -72,9 +72,9 @@ export const getDemmuyPost = (number) => Array(number).fill().map(() => ({
     }],
 }))
 
-export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST'
-export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS'
-export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE'
+export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
+export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
+export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST'
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS'
@@ -133,22 +133,20 @@ const dummyComment = (data) => (
 const reducer = (state = initialState, action) => {
     return produce(state, (draft) => {
         switch (action.type) {
-            case LOAD_POST_REQUEST:
-                draft.getPostLoadding = true
-                draft.getPostDone = false
-                draft.getPostErr = null
-
+            case LOAD_POSTS_REQUEST:
+                draft.loadPostsLoading = true;
+                draft.loadPostsDone = false;
+                draft.loadPostsError = null;
                 break;
-            case LOAD_POST_SUCCESS:
-                draft.getPostLoadding = false
-                draft.getPostDone = true
-                draft.mainPosts = action.data.concat(draft.mainPosts)
-                draft.hasMorePost = draft.mainPosts.length < 50
+            case LOAD_POSTS_SUCCESS:
+                draft.loadPostsLoading = false;
+                draft.loadPostsDone = true;
+                draft.mainPosts = action.data.concat(draft.mainPosts);
+                draft.hasMorePosts = draft.mainPosts.length < 50;
                 break;
-            case LOAD_POST_FAILURE:
-                draft.getPostLoadding = false
-                draft.getPostErr = action.err
-
+            case LOAD_POSTS_FAILURE:
+                draft.loadPostsLoading = false;
+                draft.loadPostsError = action.error;
                 break;
 
             case ADD_POST_REQUEST:

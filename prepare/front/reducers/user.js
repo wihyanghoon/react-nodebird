@@ -13,6 +13,12 @@ export const initialState = {
     changeNickLoading: false, // 닉네임변경 시도중
     changeNickDone: false,
     changeNickErr: null,
+    followingLoading: false, // 팔로잉 시도중
+    followingDone: false,
+    followingErr: null,
+    unfollowingLoading: false, // 언팔로잉 시도중
+    unfollowingDone: false,
+    unfollowingErr: null,
     me: null,
     signUpData: {},
     loginData: {},
@@ -133,6 +139,34 @@ const reducer = (state = initialState, action) => {
             case CHANGE_NICK_FAILURE:
                 draft.changeNickLoading = false
                 draft.changeNickErr = action.error
+                break;
+            case FOLLOW_REQUEST:
+                draft.followingLoading = true
+                draft.followingDone = false
+                draft.followingErr = null
+                break;
+            case FOLLOW_SUCCESS:
+                draft.followingLoading = false
+                draft.followingDone = true
+                draft.me.Followings.push({ id: action.data })
+                break;
+            case FOLLOW_FAILURE:
+                draft.followingLoading = false
+                draft.followingDone = action.error
+                break;
+            case UNFOLLOW_REQUEST:
+                draft.unfollowingLoading = true
+                draft.unfollowingDone = false
+                draft.unfollowingErr = null
+                break;
+            case UNFOLLOW_SUCCESS:
+                draft.unfollowingLoading = false
+                draft.unfollowingDone = true
+                draft.me.Followings = draft.me.Followings.filter((item) => item.id !== action.data)
+                break;
+            case UNFOLLOW_FAILURE:
+                draft.unfollowingLoading = false
+                draft.unfollowingDone = action.error
                 break;
             case ADD_POST_TO_ME:
                 draft.me.Posts.unshift({ id: action.data })
