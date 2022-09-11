@@ -7,25 +7,31 @@ import { LOAD_POST_REQUEST } from '../reducers/post'
 
 const Home = () => {
   const dispatch = useDispatch();
+  const { me } = useSelector((state) => state.user)
+  const { mainPosts, hasMorePost, getPostLoadding } = useSelector((state) => state.post)
 
-  // useEffect(() => {
-  //   dispatch({
-  //     type: LOAD_POST_REQUEST,
-  //   })
-  // })
+  useEffect(() => {
+    dispatch({
+      type: LOAD_POST_REQUEST,
+    })
+  }, [])
 
   useEffect(() => {
     function onScroll() {
-      console.log(window.scrollY. d)
+      console.log(window.scrollY, document.documentElement.clientHeight, document.documentElement.scrollHeight)
+      if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+        if (hasMorePost && !getPostLoadding) {
+          dispatch({
+            type: LOAD_POST_REQUEST,
+          })
+        }
+      }
     }
-    window.addEventListener('scroll', onscroll);
+    window.addEventListener('scroll', onScroll);
     return () => {
-      window.removeEventListener('scroll', onscroll);
+      window.removeEventListener('scroll', onScroll);
     }
-  }, [])
-
-  const { me } = useSelector((state) => state.user)
-  const { mainPosts } = useSelector((state) => state.post)
+  }, [hasMorePost, getPostLoadding])
 
   return (
     <AppLayout>

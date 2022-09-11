@@ -1,4 +1,4 @@
-import { delay, all, fork, takeLatest, put } from "redux-saga/effects";
+import { delay, all, fork, takeLatest, put, throttle } from "redux-saga/effects";
 import {
     ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
     REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
@@ -80,7 +80,7 @@ function* addComment(action) {
 }
 
 function loadPostAPI(data) {
-    return axios.get('/api/addPost', data)
+    return axios.get('/api/posts', data)
 }
 
 function* loadPost(action) {
@@ -100,7 +100,7 @@ function* loadPost(action) {
 }
 
 function* watchLoadPost() {
-    yield takeLatest(LOAD_POST_REQUEST, loadPost)
+    yield throttle(5000, LOAD_POST_REQUEST, loadPost)
 }
 
 function* watchAddPost() {

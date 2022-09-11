@@ -37,7 +37,7 @@ export const initialState = {
         }],
     }],
     imagePath: [],
-    hasMorePost : false,
+    hasMorePost : true,
     getPostLoadding: false,
     getPostDone: false,
     getPostErr: null,
@@ -142,7 +142,7 @@ const reducer = (state = initialState, action) => {
             case LOAD_POST_SUCCESS:
                 draft.getPostLoadding = false
                 draft.getPostDone = true
-                draft.mainPosts.unshift(dummyPost(action.data))
+                draft.mainPosts = action.data.concat(draft.mainPosts)
                 draft.hasMorePost = draft.mainPosts.length < 50
                 break;
             case LOAD_POST_FAILURE:
