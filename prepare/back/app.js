@@ -1,5 +1,5 @@
 const express = require('express');
-
+const postRouter = require('./routes/post')
 const app = express();
 
 app.get('/', (req, res) => {
@@ -18,13 +18,7 @@ app.get('/api/posts', (req, res) => {
     ]);
 });
 
-app.post('/api/post', (req, res) => {
-    res.send('hello api')
-})
-
-app.delete('/api/post', (req, res) => {
-    res.json({id: 1})
-})
+app.use('post', postRouter)
 
 app.listen(3065, () => {
     console.log('서버 실행중')
