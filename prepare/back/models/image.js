@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, {
         charset: "Utf8",
-        collate: 'Utf8', // 이모티콘 저장
+        collate: 'Utf8_general_ci',
     })
     Image.associate = (db) => {
         db.Image.belongsTo(db.Post)
