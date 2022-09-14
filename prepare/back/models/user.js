@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const User = sequelize.define(User,{ // MySQL 에는 user 테이블 생성
+    const User = sequelize.define('User',{ // MySQL 에는 user 테이블 생성
         email:{
             type: DataTypes.STRING(30), // STRING. TEXT. BLLEAN, FLOAT, DATETIME
             allowNullLL: false, // 필수
@@ -21,8 +21,8 @@ module.exports = (sequelize, DataTypes) => {
         db.User.hasMany(db.Post)
         db.User.hasMany(db.Comment)
         db.User.belongsToMany(db.Post, { through: 'Like', as:'Liked'})
-        db.User.belongsToMany(db.User, { through: 'Follow', as:'Followers', foreignKey: 'followinfId'})
-        db.User.belongsToMany(db.User, { through: 'Follow', as:'Followings', foreignKey: 'followerId'})
+        db.User.belongsToMany(db.User, { through: 'Follow', as:'Followers', foreignKey: 'FollowinfId'})
+        db.User.belongsToMany(db.User, { through: 'Follow', as:'Followings', foreignKey: 'FollowerId'})
     };
     return User
 }
