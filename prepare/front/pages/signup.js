@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Form, Input, Checkbox, Button } from 'antd';
 import PropTypes from 'prop-types';
-
+import Router from 'next/router'
 import AppLayout from '../components/AppLayout';
 import useInput from '../hooks/useInput';
 import { useDispatch, useSelector } from 'react-redux';
+import { SIGN_UP_REQUEST } from '../reducers/user';
 
 const TextInput = ({ value }) => {
   return (
@@ -18,7 +19,7 @@ TextInput.propTypes = {
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const { SignupLoading } = useSelector((state) => state.user)
+  const { signUpLoading, signUpDone, signUpErr } = useSelector((state) => state.user)
   const [passwordCheck, setPasswordCheck] = useState('');
   const [term, setTerm] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -27,6 +28,18 @@ const Signup = () => {
   const [email, onChangeEmail] = useInput('');
   const [nick, onChangeNick] = useInput('');
   const [password, onChangePassword] = useInput('');
+
+  useEffect(() => {
+    if (signUpDone) {
+      Router.push('/')
+    }
+  }, [signUpDone])
+
+  useEffect(() => {
+    if (signUpErr) {
+      alert(signUpErr)
+    }
+  }, [signUpErr])
 
   const onSubmit = useCallback(() => {
     if (password !== passwordCheck) {
@@ -88,7 +101,7 @@ const Signup = () => {
           {termError && <div style={{ color: 'red' }}>약관에 동의하셔야 합니다.</div>}
         </div>
         <div style={{ marginTop: 10 }}>
-          <Button type="primary" htmlType="submit" loading={SignupLoading}>가입하기</Button>
+          <Button type="primary" htmlType="submit" loading={signUpLoading}>가입하기</Button>
         </div>
       </Form>
     </AppLayout>
