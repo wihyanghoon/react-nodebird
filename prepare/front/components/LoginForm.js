@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Form, Input, Button } from 'antd';
 import Link from 'next/dist/client/link';
 import styled from 'styled-components'
@@ -7,11 +7,17 @@ import { loginRequestAction } from '../reducers/user';
 
 const LoginForm = () => {
     const dispatch = useDispatch()
-    const { logInLoading } = useSelector((state) => state.user)
+    const { logInLoading, logInErr } = useSelector((state) => state.user)
 
     const [email, setEmail] = useState("")
 
     const [password, setPassword] = useState("")
+
+    useEffect(()=>{
+        if(logInErr){
+            alert(logInErr)
+        }
+    },[logInErr])
 
     const onChangeEmail = useCallback((e) => {
         setEmail(e.target.value);

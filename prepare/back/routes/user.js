@@ -1,26 +1,48 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
-const { User } = require('../models')
-const passport = require('passport')
+const { User, Post } = require('../models')
+const passport = require('passport');
+const db = require('../models');
 const router = express.Router();
 
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
-        if(err){
+        if (err) {
             console.error(err)
             return next(err)
         }
-        if(info){
-            return res.status(401).send(user)
+        if (info) {
+            return res.status(401).send(info.reason);
         }
-        return req.login(user, async(loginErr)=>{
-            if(loginErr) {
+        return req.login(user, async (loginErr) => {
+            if (loginErr) {
                 console.error(loginErr)
                 return next(loginErr)
             }
-            return res.json()
+            const fullUserWithoutPassword = await User.findOne({
+                where: { id: user.id },
+                attributes: {
+                    exclude: ['password']
+                },
+                include: [{
+                    model: Post,
+                }, {
+                    model: User,
+                    as: 'Followings',
+                }, {
+                    model: User,
+                    as: 'Followers',
+                }]
+            })
+            return res.status(200).json(fullUserWithoutPassword)
         })
     })(req, res, next)
+})
+
+router.post('/logout', (req, res, next) => {
+    req.logout();
+    req.session.destroy();
+    res.send('OK')
 })
 
 router.post('/', async (req, res, next) => {
@@ -36,7 +58,7 @@ router.post('/', async (req, res, next) => {
         const hashedPassword = await bcrypt.hash(req.body.password, 12);
         await User.create({
             email: req.body.email,
-            nickname: req.body.nickname,
+            nickname: req.body.nick,
             password: hashedPassword,
         });
         res.status(201).send('ok');

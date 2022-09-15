@@ -19,7 +19,7 @@ TextInput.propTypes = {
 
 const Signup = () => {
   const dispatch = useDispatch();
-  const { signUpLoading, signUpDone, signUpErr } = useSelector((state) => state.user)
+  const { signUpLoading, signUpDone, signUpErr, me } = useSelector((state) => state.user)
   const [passwordCheck, setPasswordCheck] = useState('');
   const [term, setTerm] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -40,6 +40,12 @@ const Signup = () => {
       alert(signUpErr)
     }
   }, [signUpErr])
+
+  useEffect(() => {
+    if((me && me.id)){
+      Router.replace('/')
+    }
+  }, [me && me.id])
 
   const onSubmit = useCallback(() => {
     if (password !== passwordCheck) {

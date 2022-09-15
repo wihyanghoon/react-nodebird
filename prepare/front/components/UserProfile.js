@@ -20,7 +20,7 @@ const UserProfile = () => {
         <div key="fd">팔로윙<br />{me.Followings.length}</div>
       ]}
     >
-      <Card.Meta avatar={<Avatar>{me?.nickname[0]}</Avatar>} title={me?.nickname} />
+      <Card.Meta avatar={<Avatar>{me.nickname[0]}</Avatar>} title={me.nickname} />
       <Button onClick={logaoutHandler} loading={logOutLoading}>로그아웃</Button>
     </Card>
   )
