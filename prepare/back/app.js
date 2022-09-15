@@ -5,12 +5,15 @@ const db = require('./models');
 const { urlencoded } = require('express');
 const app = express();
 const cors = require('cors')
+const passportConfig = require('./passport')
 
 db.sequelize.sync()
     .then(() => {
         console.log('db 연결성공')
     })
     .catch(console.error)
+
+passportConfig();
 
 app.use(cors({
     origin: '*'
