@@ -40,19 +40,20 @@ function* logIn(action) {
 }
 
 function logOutAPI() {
-    return axios.post('/user/logaout')
+    return axios.post('/user/logout');
 }
 
 function* logOut() {
     try {
-        const result = yield call(logOutAPI)
+        yield call(logOutAPI);
         yield put({
             type: LOG_OUT_SUCCESS,
         });
     } catch (err) {
+        console.error(err);
         yield put({
             type: LOG_OUT_FAILURE,
-            error: err.response.data
+            error: err.response.data,
         });
     }
 }
