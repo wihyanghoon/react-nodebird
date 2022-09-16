@@ -7,6 +7,9 @@ export const initialState = {
     logOutLoading: false, // 로그아웃 시도중
     logOutDone: false,
     logOutErr: null,
+    loadUserLoading: false, // 로그인 불러오기 시도중
+    loadUserDone: false,
+    loadUserErr: null,
     signUpLoading: false, // 회원가입 시도중
     signUpDone: false,
     signUpErr: null,
@@ -25,6 +28,10 @@ export const initialState = {
 }
 
 //액션 타입 변수 선언
+export const LOAD_USER_REQUEST = 'LOAD_USER_REQUEST'
+export const LOAD_USER_SUCCESSS = 'LOAD_USER_SUCCESSS'
+export const LOAD_USER_FAILURE = 'LOAD_USER_FAILURE'
+
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST'
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS'
 export const LOG_IN_FAILURE = 'LOG_IN_FAILURE'
@@ -54,17 +61,6 @@ export const ADD_POST_TO_ME = 'ADD_POST_TO_ME'
 export const REMOVE_POST_TO_ME = 'REMOVE_POST_TO_ME'
 
 //더미데이터
-
-const UserDummy = (data) => {
-    return {
-        ...data,
-        nickname: '향훈',
-        id: 1,
-        Posts: [],
-        Followings: [],
-        Followers: [],
-    }
-}
 
 //로그인 액션
 
@@ -114,6 +110,21 @@ const reducer = (state = initialState, action) => {
             case LOG_OUT_FAILURE:
                 draft.logOutLoading = false
                 draft.logOutErr = action.error
+                break;
+            case LOAD_USER_REQUEST:
+                draft.loadUserLoading = true
+                draft.loadUserDone = false
+                draft.loadUserErr = null
+                break;
+            case LOAD_USER_SUCCESSS:
+                draft.loadUserLoading = false
+                draft.loadUserDone = true
+                draft.me = action.data
+                break;
+            case LOAD_USER_FAILURE:
+                draft.loadUserLoading = false
+                draft.loadUserErr = action.error
+                break;
             case SIGN_UP_REQUEST:
                 draft.signUpLoading = true
                 draft.signUpDone = false
