@@ -7,7 +7,7 @@ const db = require('../models');
 
 const router = express.Router();
 
-router.get('/', async (req, res, next) => {
+router.get('/login', async (req, res, next) => {
     try {
         if (req.user) {
             const user = await User.findOne({

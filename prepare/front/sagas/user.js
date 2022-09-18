@@ -22,7 +22,7 @@ import {
 } from '../reducers/user'
 
 function getUserAPI() {
-    return axios.get('/user')
+    return axios.get('/user/login')
 }
 
 function* getUser(action) {
