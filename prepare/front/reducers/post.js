@@ -1,6 +1,7 @@
 import shortId from 'shortid';
 import produce from 'immer';
 import faker from 'faker';
+import { LIKE_FAILURE, LIKE_REQUEST, LIKE_SUCCESS } from './user';
 
 export const initialState = {
     mainPosts: [{
@@ -33,14 +34,21 @@ export const initialState = {
                 id: shortId.generate(),
                 nickname: 'wi',
             },
-            content: '힘내자'
+            content: '힘내자',
         }],
+        Likers:[]
     }],
     imagePath: [],
     hasMorePosts: true,
     loadPostsLoading: false,
     loadPostsDone: false,
     loadPostsError: null,
+    likeLoading: false,
+    likeDone: false,
+    likeError: null,
+    unLikeLoading: false,
+    unLikeDone: false,
+    unLikeError: null,
     addPostLoadding: false,
     addPostDone: false,
     addPostErr: null,
@@ -87,6 +95,14 @@ export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE'
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST'
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS'
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE'
+
+export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
+export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
+export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
+
+export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
+export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
+export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
 
 
 
@@ -151,27 +167,65 @@ const reducer = (state = initialState, action) => {
             case REMOVE_POST_SUCCESS:
                 draft.removePostLoadding = false
                 draft.removePostDone = true
-                draft.mainPosts = state.mainPosts.filter((item) => item.id !== action.data)
+                draft.mainPosts = state.mainPosts.filter((item) => item.id !== action.data.PostId)
                 break;
+
             case REMOVE_POST_FAILURE:
                 draft.removePostLoadding = false
                 draft.removePostErr = action.err
                 break;
+
             case ADD_COMMENT_REQUEST:
                 draft.addCommentLoadding = true
                 draft.addCommentDone = false
                 draft.addCommentErr = null
                 break;
+
             case ADD_COMMENT_SUCCESS:
-                const post = draft.mainPosts.find((item) => { return item.id === action.data.PostId})
+                const post = draft.mainPosts.find((item) => { return item.id === action.data.PostId })
                 post.Comments.unshift(action.data)
 
                 draft.addCommentLoadding = false
                 draft.addCommentDone = true
                 break;
+
             case ADD_COMMENT_FAILURE:
                 draft.addCommentLoadding = false
                 draft.addCommentErr = action.error
+
+            case LIKE_POST_REQUEST:
+                draft.likeLoading = true
+                draft.likeDone = false
+                draft.likeError = null
+                break;
+
+            case LIKE_POST_SUCCESS: {
+                draft.likeLoading = false
+                draft.likeDone = true
+                const post = draft.mainPosts.find((item) => item.id === action.data.PostId)
+                post.Likers.push({id: action.data.UserId})
+                break;
+            }
+            case LIKE_POST_FAILURE:
+                draft.unLikeLoading = false
+                draft.unLikeError = true
+
+            case UNLIKE_POST_REQUEST:
+                draft.unLikeLoading = true
+                draft.unLikeDone = false
+                draft.unLikeError = null
+                break;
+
+            case UNLIKE_POST_SUCCESS: {
+                draft.unLikeLoading = false
+                draft.unLikeDone = true
+                const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+                post.Likers = post.Likers.filter((v) => v.id !== action.data.UserId);
+                break;
+            }
+            case UNLIKE_POST_FAILURE:
+                draft.unLikeLoading = false
+                draft.unLikeDone = true
 
             default:
                 return state

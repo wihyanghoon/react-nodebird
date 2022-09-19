@@ -6,18 +6,13 @@ import PostImages from './PostImages'
 import { useCallback } from 'react'
 import CommentForm from './CommentForm'
 import PostCardContent from './PostCardContent'
-import { REMOVE_POST_REQUEST } from '../reducers/post'
+import { REMOVE_POST_REQUEST, UNLIKE_POST_REQUEST, LIKE_POST_REQUEST } from '../reducers/post'
 import FollowButton from './FollowButton'
 
 const PostCard = ({ post }) => {
     const { removePostLoadding } = useSelector((state) => state.post)
-    const [liked, setLiked] = useState(false)
     const [commentFormOpened, setCommentFormOpened] = useState(false);
-    const id = useSelector((state) => state.user.me?.id)
     const dispatch = useDispatch();
-    const onToggleLike = useCallback(() => {
-        setLiked((prev) => !prev)
-    }, []);
 
     const onToggleComment = useCallback(() => {
         setCommentFormOpened((prev) => !prev)
@@ -32,6 +27,23 @@ const PostCard = ({ post }) => {
         )
     }, [])
 
+    const onLike = useCallback(() => {
+        dispatch({
+            type: UNLIKE_POST_REQUEST,
+            data: post.id
+        })
+    }, [])
+
+    const onUnLike = useCallback(() => {
+        dispatch({
+            type: LIKE_POST_REQUEST,
+            data: post.id
+        })
+    }, [])
+
+    const id = useSelector((state) => state.user.me?.id)
+    const liked = post.Likers.find((item) => item.id === id)
+
     return (
         <div style={{ marginBottom: 20 }}>
             <Card
@@ -39,8 +51,8 @@ const PostCard = ({ post }) => {
                 actions={[
                     <RetweetOutlined key="retweet" />,
                     liked
-                        ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onToggleLike} />
-                        : <HeartOutlined key="heart" onClick={onToggleLike} />,
+                        ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onLike} />
+                        : <HeartOutlined key="heart" onClick={onUnLike} />,
                     <MessageOutlined key="comment" onClick={onToggleComment} />,
                     <Popover key="more" content={(
                         <Button.Group>
@@ -55,7 +67,7 @@ const PostCard = ({ post }) => {
                         <EllipsisOutlined />
                     </Popover>
                 ]}
-                extra={id && <FollowButton post={post}/>}
+                extra={id && <FollowButton post={post} />}
             >
                 <Card.Meta
                     avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
