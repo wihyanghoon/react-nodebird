@@ -53,24 +53,24 @@ export const initialState = {
 }
 
 
-export const getDemmuyPost = (number) => Array(number).fill().map(() => ({
-    id: shortId.generate(),
-    User: {
-        id: shortId.generate(),
-        nickname: faker.name.findName(),
-    },
-    content: faker.lorem.paragraph(),
-    Images: [{
-        src: faker.image.image(),
-    }],
-    Comments: [{
-        User: {
-            id: shortId.generate(),
-            nickname: faker.name.findName(),
-        },
-        content: faker.lorem.sentence(),
-    }],
-}))
+// export const getDemmuyPost = (number) => Array(number).fill().map(() => ({
+//     id: shortId.generate(),
+//     User: {
+//         id: shortId.generate(),
+//         nickname: faker.name.findName(),
+//     },
+//     content: faker.lorem.paragraph(),
+//     Images: [{
+//         src: faker.image.image(),
+//     }],
+//     Comments: [{
+//         User: {
+//             id: shortId.generate(),
+//             nickname: faker.name.findName(),
+//         },
+//         content: faker.lorem.sentence(),
+//     }],
+// }))
 
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
@@ -163,7 +163,7 @@ const reducer = (state = initialState, action) => {
                 draft.addCommentErr = null
                 break;
             case ADD_COMMENT_SUCCESS:
-                const post = draft.mainPosts.find((item) => item.id === action.data.postId)
+                const post = draft.mainPosts.find((item) => { return item.id === action.data.PostId})
                 post.Comments.unshift(action.data)
 
                 draft.addCommentLoadding = false

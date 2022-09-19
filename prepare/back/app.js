@@ -1,7 +1,8 @@
 const express = require('express');
-const postRouter = require('./routes/post')
-const userRouter = require('./routes/user')
-
+const postRouter = require('./routes/post');
+const postsRouter = require('./routes/posts');
+const userRouter = require('./routes/user');
+const morgan = require('morgan')
 const db = require('./models');
 const passportConfig = require('./passport');
 
@@ -9,9 +10,9 @@ const { urlencoded } = require('express');
 const app = express();
 const cors = require('cors')
 const passport = require('passport');
-const session = require('express-session')
-const cookieParser = require('cookie-parser')
-const dotenv = require('dotenv')
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const dotenv = require('dotenv');
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ db.sequelize.sync()
     .catch(console.error)
 
 passportConfig();
-
+app.use(morgan('dev'))
 app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true,
@@ -46,15 +47,8 @@ app.get('/api', (req, res) => {
     res.send('hello express')
 })
 
-app.get('/api/posts', (req, res) => {
-    res.json([
-        { id: 1, content: 'hello' },
-        { id: 2, content: 'hello1' },
-        { id: 3, content: 'hello2' },
-    ]);
-});
-
 app.use('/post', postRouter)
+app.use('/posts', postsRouter)
 app.use('/user', userRouter)
 
 app.listen(3065, () => {

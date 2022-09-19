@@ -3,7 +3,7 @@ import {
     ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE,
     REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
     ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE,
-    LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE, getDemmuyPost
+    LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE
 } from '../reducers/post'
 
 import { ADD_POST_TO_ME, REMOVE_POST_TO_ME } from "../reducers/user";
@@ -59,16 +59,15 @@ function* removePost(action) {
 }
 
 function addCommentAPI(data) {
-    return axios.post(`/post/${data.PostId}/comment`, data)
+    return axios.post(`/post/${data.postId}/comment`, data)
 }
 
 function* addComment(action) {
     try {
-        // const result = yield call(addPostAPI, action.data)
-        yield delay(1000)
+        const result = yield call(addCommentAPI, action.data)
         yield put({
             type: ADD_COMMENT_SUCCESS,
-            data: action.data
+            data: result.data
         });
     } catch (err) {
         yield put({
@@ -79,16 +78,15 @@ function* addComment(action) {
 }
 
 function loadPostsAPI(data) {
-    return axios.get('/api/posts', data);
+    return axios.get('/posts', data);
 }
 
 function* loadPosts(action) {
     try {
-        // const result = yield call(loadPostsAPI, action.data);
-        yield delay(1000);
+        const result = yield call(loadPostsAPI, action.data);
         yield put({
             type: LOAD_POSTS_SUCCESS,
-            data: getDemmuyPost(10),
+            data: result.data,
         });
     } catch (err) {
         console.error(err);
