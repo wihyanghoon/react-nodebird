@@ -19,6 +19,7 @@ function addPostAPI(data) {
 function* addPost(action) {
     try {
         const result = yield call(addPostAPI, action.data);
+        yield console.log(result)
         yield put({
             type: ADD_POST_SUCCESS,
             data: result.data,
@@ -44,13 +45,14 @@ function* removePost(action) {
     console.log(action.data)
     try {
         const result = yield call(removePostAPI, action.data)
+        yield console.log(typeof result.data.PostId)
         yield put({
             type: REMOVE_POST_SUCCESS,
             data: result.data
         })
         yield put({
             type: REMOVE_POST_TO_ME,
-            data: result.data
+            data: result.data.PostId
         })
     } catch (err) {
         yield put({
@@ -86,6 +88,7 @@ function loadPostsAPI(data) {
 function* loadPosts(action) {
     try {
         const result = yield call(loadPostsAPI, action.data);
+        yield console.log(result)
         yield put({
             type: LOAD_POSTS_SUCCESS,
             data: result.data,

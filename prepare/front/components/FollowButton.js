@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { FOLLOW_REQUEST, UNFOLLOW_REQUEST } from '../reducers/user'
 
 const FollowButton = ({ post }) => {
+
   const { me, followingLoading, unfollowingLoading } = useSelector((state) => state.user)
-  console.log(unfollowingLoading)
+
   const dispatch = useDispatch()
 
   const isFollowing = me?.Followings.find((item) => item.id === post.User.id)

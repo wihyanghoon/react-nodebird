@@ -18,7 +18,10 @@ import {
     UNFOLLOW_FAILURE,
     LOAD_USER_REQUEST,
     LOAD_USER_SUCCESSS,
-    LOAD_USER_FAILURE
+    LOAD_USER_FAILURE,
+    CHANGE_NICK_REQUEST,
+    CHANGE_NICK_SUCCESS,
+    CHANGE_NICK_FAILURE
 } from '../reducers/user'
 
 function getUserAPI() {
@@ -140,6 +143,26 @@ function* unFollow(action) {
     }
 }
 
+function chanegeNickAPI(data) {
+    return axios.patch('/user/nickname', { nickname : data })
+}
+
+function* chanegeNick(action) {
+    try {
+        const result = yield call(chanegeNickAPI, action.data)
+        yield console.log(result)
+        yield put({
+            type: CHANGE_NICK_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        yield put({
+            type: CHANGE_NICK_FAILURE,
+            error: err.response.data
+        });
+    }
+}
+
 function* watchLogIn() {
     yield takeLatest(LOG_IN_REQUEST, logIn)
 }
@@ -164,6 +187,10 @@ function* watchGetUser() {
     yield takeLatest(LOAD_USER_REQUEST, getUser)
 }
 
+function* watchChanegeNick() {
+    yield takeLatest(CHANGE_NICK_REQUEST, chanegeNick)
+}
+
 export default function* userSaga() {
     yield all([
         fork(watchLogIn),
@@ -173,5 +200,6 @@ export default function* userSaga() {
         fork(watchFollow),
         fork(watchUnFollow),
         fork(watchGetUser),
+        fork(watchChanegeNick),
     ])
 }

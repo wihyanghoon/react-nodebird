@@ -107,7 +107,6 @@ export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
 
 
 export const addPostAction = (data) => {
-    console.log(data)
     return {
         type: ADD_POST_REQUEST,
         data
@@ -115,7 +114,6 @@ export const addPostAction = (data) => {
 }
 
 export const addCommentAction = (data) => {
-    console.log(data)
     return {
         type: ADD_COMMENT_REQUEST,
         data
