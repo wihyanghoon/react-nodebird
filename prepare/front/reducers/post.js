@@ -4,40 +4,7 @@ import faker from 'faker';
 import { LIKE_FAILURE, LIKE_REQUEST, LIKE_SUCCESS } from './user';
 
 export const initialState = {
-    mainPosts: [{
-        id: 1,
-        User: {
-            id: 1,
-            nickname: '제로초',
-        },
-        content: '첫번째 게실글 #해시태그 #익스프레스',
-        Images: [{
-            id: shortId.generate(),
-            src: 'https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726',
-        }, {
-            id: shortId.generate(),
-            src: 'https://gimg.gilbut.co.kr/book/BN001958/rn_view_BN001958.jpg',
-        }, {
-            id: shortId.generate(),
-            src: 'https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg',
-        }],
-        Comments: [{
-            id: shortId.generate(),
-            User: {
-                id: shortId.generate(),
-                nickname: 'nero',
-            },
-            content: '우와우와'
-        }, {
-            id: shortId.generate(),
-            User: {
-                id: shortId.generate(),
-                nickname: 'wi',
-            },
-            content: '힘내자',
-        }],
-        Likers:[]
-    }],
+    mainPosts: [],
     imagePath: [],
     hasMorePosts: true,
     loadPostsLoading: false,
