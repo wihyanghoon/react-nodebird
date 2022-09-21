@@ -25,6 +25,9 @@ export const initialState = {
     addCommentLoadding: false,
     addCommentDone: false,
     addCommentErr: null,
+    upLoadImagesLoadding: false,
+    upLoadImagesDone: false,
+    upLoadImagesErr: null,
 }
 
 
@@ -46,6 +49,7 @@ export const initialState = {
 //         content: faker.lorem.sentence(),
 //     }],
 // }))
+export const REMOVE_IMAGES_SUCSESS = 'REMOVE_IMAGES_SUCSESS';
 
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
@@ -66,6 +70,10 @@ export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE'
 export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
 export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
 export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
+
+export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
+export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
+export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
 
 export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
 export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
@@ -90,6 +98,10 @@ export const addCommentAction = (data) => {
 const reducer = (state = initialState, action) => {
     return produce(state, (draft) => {
         switch (action.type) {
+            case REMOVE_IMAGES_SUCSESS:
+                console.log(action.data)
+                draft.imagePath = draft.imagePath.filter((item, index) => index !== action.data)
+                break;
             case LOAD_POSTS_REQUEST:
                 draft.loadPostsLoading = true;
                 draft.loadPostsDone = false;
@@ -191,7 +203,21 @@ const reducer = (state = initialState, action) => {
             case UNLIKE_POST_FAILURE:
                 draft.unLikeLoading = false
                 draft.unLikeDone = true
-
+                break;
+            case  UPLOAD_IMAGES_REQUEST:
+                draft.upLoadImagesLoadding = true
+                draft.upLoadImagesDone = false
+                draft.upLoadImagesErr = null
+                break;
+            case UPLOAD_IMAGES_SUCCESS:
+                draft.upLoadImagesLoadding = true
+                draft.upLoadImagesDone = false
+                draft.imagePath = action.data
+                break;
+            case UPLOAD_IMAGES_FAILURE:
+                draft.upLoadImagesLoadding = false
+                draft.upLoadImagesErr = action.error
+                break;
             default:
                 return state
         }

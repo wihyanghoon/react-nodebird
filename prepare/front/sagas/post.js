@@ -5,7 +5,8 @@ import {
     ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE,
     LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
     LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE,
-    UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE
+    UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE,
+    UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE
 } from '../reducers/post'
 
 import { ADD_POST_TO_ME, REMOVE_POST_TO_ME } from "../reducers/user";
@@ -13,7 +14,7 @@ import axios from "axios";
 import shortId from 'shortid';
 
 function addPostAPI(data) {
-    return axios.post('/post', { content: data });
+    return axios.post('/post', data);
 }
 
 function* addPost(action) {
@@ -142,6 +143,26 @@ function* UnLikePost(action) {
     }
 }
 
+function upLoadImagesAPI(data) {
+    return axios.post('/post/images', data);
+}
+
+function* upLoadImages(action) {
+    try {
+        const result = yield call(upLoadImagesAPI, action.data);
+        yield put({
+            type: UPLOAD_IMAGES_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type: UPLOAD_IMAGES_FAILURE,
+            data: err.response.data,
+        });
+    }
+}
+
 function* watchLoadPosts() {
     yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
 }
@@ -166,6 +187,10 @@ function* watchUnLiketPost() {
     yield takeLatest(UNLIKE_POST_REQUEST, UnLikePost)
 }
 
+function* watchUpLoadImages() {
+    yield takeLatest(UPLOAD_IMAGES_REQUEST, upLoadImages)
+}
+
 
 export default function* postSaga() {
     yield all([
@@ -175,5 +200,6 @@ export default function* postSaga() {
         fork(watchLoadPosts),
         fork(watchLikePost),
         fork(watchUnLiketPost),
+        fork(watchUpLoadImages),
     ]);
 }
