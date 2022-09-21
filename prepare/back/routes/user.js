@@ -187,4 +187,24 @@ router.get('/following', isLoggedIn, async (req, res, next) => {
     }
 })
 
+router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => { 
+    try {
+        const post = await Post.findOne({ 
+            where: { id: req.params.id },
+            include: [{
+                model: Post,
+                as: 'Retweet',
+            }]
+        })
+        if (!post) {
+            res.status(403).send('존재하지 않은 게시글 입니다.')
+        }
+        const followings = await user.getFollowings();
+        res.status(200).json(followings)
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
+
 module.exports = router;

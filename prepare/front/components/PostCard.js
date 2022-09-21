@@ -13,6 +13,8 @@ const PostCard = ({ post }) => {
     const { removePostLoadding } = useSelector((state) => state.post)
     const [commentFormOpened, setCommentFormOpened] = useState(false);
     const dispatch = useDispatch();
+    const id = useSelector((state) => state.user.me?.id)
+    const liked = post.Likers.find((item) => item.id === id)
 
     const onToggleComment = useCallback(() => {
         setCommentFormOpened((prev) => !prev)
@@ -41,15 +43,22 @@ const PostCard = ({ post }) => {
         })
     }, [])
 
-    const id = useSelector((state) => state.user.me?.id)
-    const liked = post.Likers.find((item) => item.id === id)
+    const onRetweet = useCallback(()=>{
+        if(!id){
+            return alert('로그인이 필요합니다.')
+        }
+        return dispatch({
+            type: RETWEET_REQUEST,
+            data: post.id
+        })
+    },[id])
 
     return (
         <div style={{ marginBottom: 20 }}>
             <Card
                 cover={post.Images[0] && <PostImages images={post.Images} />}
                 actions={[
-                    <RetweetOutlined key="retweet" />,
+                    <RetweetOutlined key="retweet" onClick={onRetweet}/>,
                     liked
                         ? <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onLike} />
                         : <HeartOutlined key="heart" onClick={onUnLike} />,

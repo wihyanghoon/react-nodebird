@@ -28,6 +28,9 @@ export const initialState = {
     upLoadImagesLoadding: false,
     upLoadImagesDone: false,
     upLoadImagesErr: null,
+    retweetLoadding: false,
+    retweetDone: false,
+    retweetErr: null,
 }
 
 
@@ -79,7 +82,9 @@ export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
 export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
 export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
 
-
+export const RETWEET_REQUEST = 'RETWEET_REQUEST'
+export const RETWEET_SUCCESS = 'RETWEET_SUCCESS'
+export const RETWEET_FAILURE = 'RETWEET_FAILURE'
 
 export const addPostAction = (data) => {
     return {
@@ -98,6 +103,19 @@ export const addCommentAction = (data) => {
 const reducer = (state = initialState, action) => {
     return produce(state, (draft) => {
         switch (action.type) {
+            case RETWEET_REQUEST:
+                draft.retweetLoadding = true
+                draft.retweetDone = false
+                draft.retweetErr = null
+                break;
+            case RETWEET_SUCCESS:
+                draft.retweetLoadding = false
+                draft.retweetDone = true
+                break;
+            case RETWEET_FAILURE:
+                draft.retweetLoadding = false
+                draft.retweetErr = action.err
+                break;
             case REMOVE_IMAGES_SUCSESS:
                 console.log(action.data)
                 draft.imagePath = draft.imagePath.filter((item, index) => index !== action.data)
@@ -128,7 +146,7 @@ const reducer = (state = initialState, action) => {
                 draft.addPostLoadding = false
                 draft.addPostDone = true
                 draft.mainPosts.unshift(action.data)
-
+                draft.imagePath = []
                 break;
             case ADD_POST_FAILURE:
                 draft.addPostLoadding = false
