@@ -21,7 +21,16 @@ import {
     LOAD_USER_FAILURE,
     CHANGE_NICK_REQUEST,
     CHANGE_NICK_SUCCESS,
-    CHANGE_NICK_FAILURE
+    CHANGE_NICK_FAILURE,
+    LOAD_FOLLOWER_REQUEST,
+    LOAD_FOLLOWER_SUCCESS,
+    LOAD_FOLLOWER_FAILURE,
+    LOAD_FOLLWING_REQUEST,
+    LOAD_FOLLWING_SUCESSS,
+    LOAD_FOLLWING_FAILURE,
+    REMOVE_FOLLOWER_REQUEST,
+    REMOVE_FOLLOWER_SUCCESS,
+    REMOVE_FOLLOWER_FAILURE
 } from '../reducers/user'
 
 function getUserAPI() {
@@ -38,6 +47,44 @@ function* getUser(action) {
     } catch (err) {
         yield put({
             type: LOAD_USER_FAILURE,
+            error: err.response.data
+        });
+    }
+}
+
+function getFollwerAPI(data) {
+    return axios.get('/user/follower', data)
+}
+
+function* getFollwer(action) {
+    try {
+        const result = yield call(getFollwerAPI, action.data)
+        yield put({
+            type: LOAD_FOLLOWER_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        yield put({
+            type: LOAD_FOLLOWER_FAILURE,
+            error: err.response.data
+        });
+    }
+}
+
+function getFollowingAPI(data) {
+    return axios.get('/user/following', data)
+}
+
+function* getFollowing(action) {
+    try {
+        const result = yield call(getFollowingAPI, action.data)
+        yield put({
+            type: LOAD_FOLLWING_SUCESSS,
+            data: result.data,
+        });
+    } catch (err) {
+        yield put({
+            type: LOAD_FOLLWING_FAILURE,
             error: err.response.data
         });
     }
@@ -103,17 +150,16 @@ function* signUp(action) {
         });
     }
 }
-function followAPI() {
-    return axios.post('/api/logaout')
+function followAPI(data) {
+    return axios.patch(`/user/${data}/follow`)
 }
 
 function* follow(action) {
     try {
-        // const result = yield call(logOutAPI)
-        yield delay(1000)
+        const result = yield call(followAPI , action.data)
         yield put({
             type: FOLLOW_SUCCESS,
-            data: action.data
+            data: result.data
         });
     } catch (err) {
         yield put({
@@ -123,17 +169,17 @@ function* follow(action) {
     }
 }
 
-function unFollowAPI() {
-    return axios.post('/api/logaout')
+function unFollowAPI(data) {
+    return axios.delete(`/user/${data}/follow`)
 }
 
 function* unFollow(action) {
     try {
-        // const result = yield call(logOutAPI)
-        yield delay(1000)
+        const result = yield call(unFollowAPI, action.data)
+        yield console.log(result)
         yield put({
             type: UNFOLLOW_SUCCESS,
-            data: action.data
+            data: result.data
         });
     } catch (err) {
         yield put({
@@ -163,6 +209,27 @@ function* chanegeNick(action) {
     }
 }
 
+function removeFollowerAPI(data) {
+    return axios.delete(`/user/${data}/following`)
+}
+
+function* removeFollower(action) {
+    try {
+        const result = yield call(removeFollowerAPI, action.data)
+        console.log(result)
+        yield console.log(result)
+        yield put({
+            type: REMOVE_FOLLOWER_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        yield put({
+            type: REMOVE_FOLLOWER_FAILURE,
+            error: err.response.data
+        });
+    }
+}
+
 function* watchLogIn() {
     yield takeLatest(LOG_IN_REQUEST, logIn)
 }
@@ -187,8 +254,20 @@ function* watchGetUser() {
     yield takeLatest(LOAD_USER_REQUEST, getUser)
 }
 
+function* watchGetFollow() {
+    yield takeLatest(LOAD_FOLLOWER_REQUEST, getFollwer)
+}
+
+function* watchGetFollowing() {
+    yield takeLatest(LOAD_FOLLWING_REQUEST, getFollowing)
+}
+
 function* watchChanegeNick() {
     yield takeLatest(CHANGE_NICK_REQUEST, chanegeNick)
+}
+
+function* watchRemoveFollower(){
+    yield takeLatest(REMOVE_FOLLOWER_REQUEST, removeFollower)
 }
 
 export default function* userSaga() {
@@ -199,7 +278,10 @@ export default function* userSaga() {
         fork(watchSignUp),
         fork(watchFollow),
         fork(watchUnFollow),
+        fork(watchRemoveFollower),
         fork(watchGetUser),
         fork(watchChanegeNick),
+        fork(watchGetFollow),
+        fork(watchGetFollowing),
     ])
 }

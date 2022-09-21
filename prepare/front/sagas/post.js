@@ -88,7 +88,7 @@ function loadPostsAPI(data) {
 function* loadPosts(action) {
     try {
         const result = yield call(loadPostsAPI, action.data);
-        yield console.log(result)
+
         yield put({
             type: LOAD_POSTS_SUCCESS,
             data: result.data,

@@ -19,9 +19,18 @@ export const initialState = {
     followingLoading: false, // 팔로잉 시도중
     followingDone: false,
     followingErr: null,
-    unfollowingLoading: false, // 언팔로잉 시도중
+    unfollowingLoading: false, // 팔로잉 제거
     unfollowingDone: false,
     unfollowingErr: null,
+    loadfollowLoading: false, // 팔로우 목록 불러오기 시도중
+    loadfollowDone: false,
+    loadfollowErr: null,
+    loadfollowingLoading: false, // 팔로잉 목록 불러오기 시도중
+    loadfollowingDone: false,
+    loadfollowingErr: null,
+    removefollowerLoading: false, // 팔로워 제거 시도중
+    removefollowerDone: false,
+    removefollowerErr: null,
     me: null,
     signUpData: {},
     loginData: {},
@@ -56,6 +65,18 @@ export const FOLLOW_FAILURE = 'FOLLOW_FAILURE'
 export const UNFOLLOW_REQUEST = 'UNFOLLOW_REQUEST'
 export const UNFOLLOW_SUCCESS = 'UNFOLLOW_SUCCESS'
 export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE'
+
+export const LOAD_FOLLOWER_REQUEST = 'LOAD_FOLLOWER_REQUEST'
+export const LOAD_FOLLOWER_SUCCESS = 'LOAD_FOLLOWER_SUCCESS'
+export const LOAD_FOLLOWER_FAILURE = 'LOAD_FOLLOWER_FAILURE'
+
+export const REMOVE_FOLLOWER_REQUEST = 'REMOVE_FOLLOWER_REQUEST'
+export const REMOVE_FOLLOWER_SUCCESS = 'REMOVE_FOLLOWER_SUCCESS'
+export const REMOVE_FOLLOWER_FAILURE = 'REMOVE_FOLLOWER_FAILURE'
+
+export const LOAD_FOLLWING_REQUEST = 'LOAD_FOLLWING_REQUEST'
+export const LOAD_FOLLWING_SUCESSS = 'LOAD_FOLLWING_SUCESSS'
+export const LOAD_FOLLWING_FAILURE = 'LOAD_FOLLWING_FAILURE'
 
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME'
 export const REMOVE_POST_TO_ME = 'REMOVE_POST_TO_ME'
@@ -160,7 +181,7 @@ const reducer = (state = initialState, action) => {
             case FOLLOW_SUCCESS:
                 draft.followingLoading = false
                 draft.followingDone = true
-                draft.me.Followings.push({ id: action.data })
+                draft.me.Followings.push({ id: action.data.userId })
                 break;
             case FOLLOW_FAILURE:
                 draft.followingLoading = false
@@ -174,17 +195,59 @@ const reducer = (state = initialState, action) => {
             case UNFOLLOW_SUCCESS:
                 draft.unfollowingLoading = false
                 draft.unfollowingDone = true
-                draft.me.Followings = draft.me.Followings.filter((item) => item.id !== action.data)
+                draft.me.Followings = draft.me.Followings.filter((item) => item.id !== action.data.userId)
                 break;
             case UNFOLLOW_FAILURE:
                 draft.unfollowingLoading = false
-                draft.unfollowingDone = action.error
+                draft.unfollowingErr = action.error
+                break;
+            case LOAD_FOLLOWER_REQUEST:
+                draft.loadfollowLoading = true
+                draft.loadfollowDone = false
+                draft.loadfollowErr = null
+                break;
+            case LOAD_FOLLOWER_SUCCESS:
+                draft.loadfollowLoading = false
+                draft.loadfollowDone = true
+                draft.me.Followers = action.data
+                break;
+            case LOAD_FOLLOWER_FAILURE:
+                draft.loadfollowLoading = false
+                draft.loadfollowErr = action.err
+                break;
+            case REMOVE_FOLLOWER_REQUEST:
+                draft.removefollowerLoading = true
+                draft.removefollowerDone = false
+                draft.removefollowerErr = null
+                break;
+            case REMOVE_FOLLOWER_SUCCESS:
+                draft.removefollowerLoading = false
+                draft.removefollowerDone = true
+                draft.me.Followers = draft.me.Followers.filter((item)=> item.id !== action.data.userId)
+                break;
+            case REMOVE_FOLLOWER_FAILURE:
+                draft.removefollowerLoading = false
+                draft.removefollowerErr = action.err
+                break;
+            case LOAD_FOLLWING_REQUEST:
+                draft.loadfollowingLoading = true
+                draft.loadfollowingDone = false
+                draft.loadfollowingErr = null
+                break;
+            case LOAD_FOLLWING_SUCESSS:
+                draft.loadfollowingLoading = false
+                draft.loadfollowingDone = true
+                draft.me.Followings = action.data
+                break;
+            case LOAD_FOLLWING_FAILURE:
+                draft.loadfollowingLoading = false
+                draft.loadfollowingErr = action.err
                 break;
             case ADD_POST_TO_ME:
                 console.log(action.data)
                 draft.me.Posts.unshift({ id: action.data })
                 break;
-            case REMOVE_POST_TO_ME: 
+            case REMOVE_POST_TO_ME:
                 console.log(action.data)
                 draft.me.Posts = draft.me.Posts.filter((item) => item.id !== action.data)
                 break;

@@ -20,21 +20,21 @@ const Home = () => {
     });
   }, []);
 
-  useEffect(() => {
-    function onScroll() {
-      if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
-        if (hasMorePosts && !loadPostsLoading) {
-          dispatch({
-            type: LOAD_POSTS_REQUEST,
-          });
-        }
-      }
-    }
-    window.addEventListener('scroll', onScroll);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-    };
-  }, [hasMorePosts, loadPostsLoading])
+  // useEffect(() => {
+  //   function onScroll() {
+  //     if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+  //       if (hasMorePosts && !loadPostsLoading) {
+  //         dispatch({
+  //           type: LOAD_POSTS_REQUEST,
+  //         });
+  //       }
+  //     }
+  //   }
+  //   window.addEventListener('scroll', onScroll);
+  //   return () => {
+  //     window.removeEventListener('scroll', onScroll);
+  //   };
+  // }, [hasMorePosts, loadPostsLoading])
 
   return (
     <AppLayout>

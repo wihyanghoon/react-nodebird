@@ -3,11 +3,13 @@ import Head from 'next/head'
 import AppLayout from '../components/AppLayout'
 import NicknameEditForm from '../components/NicknameEditForm'
 import FollowList from '../components/FollowList'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { LOAD_FOLLOWER_REQUEST, LOAD_FOLLWING_REQUEST} from '../reducers/user'
 import Router from 'next/router'
 
 const Profile = () => {
   const { me } = useSelector((state) => state.user)
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if(!(me && me.id)){
@@ -18,6 +20,15 @@ const Profile = () => {
   if (!me) {
     return null
   }
+
+  useEffect(()=>{
+    dispatch({
+      type: LOAD_FOLLOWER_REQUEST
+    })
+    dispatch({
+      type: LOAD_FOLLWING_REQUEST
+    })
+  } , [])
 
   return (
     <>
