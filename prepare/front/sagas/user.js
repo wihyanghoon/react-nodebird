@@ -30,14 +30,37 @@ import {
     LOAD_FOLLWING_FAILURE,
     REMOVE_FOLLOWER_REQUEST,
     REMOVE_FOLLOWER_SUCCESS,
-    REMOVE_FOLLOWER_FAILURE
+    REMOVE_FOLLOWER_FAILURE,
+    LOAD_MYINFO_REQUEST,
+    LOAD_MYINFO_SUCCESSS,
+    LOAD_MYINFO_FAILURE
 } from '../reducers/user'
 
-function getUserAPI() {
-    return axios.get('/user/login')
+function loadMyInfoAPI() {
+    return axios.get('/user')
 }
 
-function* getUser(action) {
+function* loadMyInfo() {
+    try {
+        const result = yield call(loadMyInfoAPI)
+        yield put({
+            type: LOAD_MYINFO_SUCCESSS,
+            data: result.data,
+        });
+    } catch (err) {
+        yield put({
+            type: LOAD_MYINFO_FAILURE,
+            error: err.response.data,
+        });
+    }
+}
+
+
+function getUserAPI(data) {
+    return axios.get(`/user/${data}`)
+}
+
+function* getUser() {
     try {
         const result = yield call(getUserAPI, action.data)
         yield put({
@@ -270,9 +293,14 @@ function* watchRemoveFollower(){
     yield takeLatest(REMOVE_FOLLOWER_REQUEST, removeFollower)
 }
 
+function* watchLoadMyInfo(){
+    yield takeLatest(LOAD_MYINFO_REQUEST, loadMyInfo)
+}
+
 export default function* userSaga() {
     yield all([
         fork(watchLogIn),
+        fork(watchLoadMyInfo),
         fork(watchLogOut),
         fork(watchLogOut),
         fork(watchSignUp),

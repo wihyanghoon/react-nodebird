@@ -59,7 +59,7 @@ function* removePost(action) {
     } catch (err) {
         yield put({
             type: REMOVE_POST_FAILURE,
-            data: err.response.data
+            error: err.response.data
         });
     }
 }
@@ -78,18 +78,18 @@ function* addComment(action) {
     } catch (err) {
         yield put({
             type: ADD_COMMENT_FAILURE,
-            data: err.response.data
+            error: err.response.data
         });
     }
 }
 
-function loadPostsAPI(data) {
-    return axios.get('/posts', data);
+function loadPostsAPI(lastId) {
+    return axios.get(`/posts?lastId=${lastId || 0}`);
 }
 
 function* loadPosts(action) {
     try {
-        const result = yield call(loadPostsAPI, action.data);
+        const result = yield call(loadPostsAPI, action.lastId);
 
         yield put({
             type: LOAD_POSTS_SUCCESS,
@@ -165,27 +165,23 @@ function* upLoadImages(action) {
 }
 
 function retweetApi(data){
-    return axios.post('/post/${data}/retweet', data);
+    return axios.post(`/post/${data}/retweet`);
 }
 
 function* retweet(action) {
     try {
         const result = yield call(retweetApi, action.data);
         yield put({
-            type: UPLOAD_IMAGES_SUCCESS,
+            type: RETWEET_SUCCESS,
             data: result.data,
         });
     } catch (err) {
         console.error(err);
         yield put({
-            type: UPLOAD_IMAGES_FAILURE,
-            data: err.response.data,
+            type: RETWEET_FAILURE,
+            err: err.response.data,
         });
     }
-}
-
-function* watchRetweet() {
-    yield takeLatest(REMOVE_POST_REQUEST, retweet);
 }
 
 function* watchLoadPosts() {
@@ -214,6 +210,10 @@ function* watchUnLiketPost() {
 
 function* watchUpLoadImages() {
     yield takeLatest(UPLOAD_IMAGES_REQUEST, upLoadImages)
+}
+
+function* watchRetweet() {
+    yield takeLatest(RETWEET_REQUEST, retweet)
 }
 
 

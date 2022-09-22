@@ -4,6 +4,7 @@ import Slick from 'react-slick'
 import { Overlay, Header, CloseBtn, SlickWrapper, ImgWrapper, Indicator, Global } from './styles'
 
 const ImagesZoom = ({ images, onClose }) => {
+
     const [currentSlise, setCurrentSlise] = useState(0)
     return (
         <Overlay>

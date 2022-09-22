@@ -1,6 +1,9 @@
 import produce from 'immer'
 
 export const initialState = {
+    loadMyInfoLoading: false, // 로그인 불러오기 시도중
+    loadMyInfoDone: false,
+    loadMyInfoErr: null,
     logInLoading: false, // 로그인 시도중
     logInDone: false,
     logInErr: null,
@@ -32,11 +35,13 @@ export const initialState = {
     removefollowerDone: false,
     removefollowerErr: null,
     me: null,
-    signUpData: {},
-    loginData: {},
 }
 
 //액션 타입 변수 선언
+export const LOAD_MYINFO_REQUEST = 'LOAD_MYINFO_REQUEST'
+export const LOAD_MYINFO_SUCCESSS = 'LOAD_MYINFO_SUCCESSS'
+export const LOAD_MYINFO_FAILURE = 'LOAD_MYINFO_FAILURE'
+
 export const LOAD_USER_REQUEST = 'LOAD_USER_REQUEST'
 export const LOAD_USER_SUCCESSS = 'LOAD_USER_SUCCESSS'
 export const LOAD_USER_FAILURE = 'LOAD_USER_FAILURE'
@@ -104,6 +109,20 @@ export const logoutRequestAction = (data) => {
 const reducer = (state = initialState, action) => {
     return produce(state, (draft) => {
         switch (action.type) {
+            case LOAD_MYINFO_REQUEST:
+                draft.loadMyInfoLoading = true
+                draft.loadMyInfoDone = false
+                draft.loadMyInfoErr = null
+                break;
+            case LOAD_MYINFO_SUCCESSS:
+                draft.loadMyInfoLoading = false
+                draft.loadMyInfoDone = true
+                draft.me = action.data
+                break;
+            case LOAD_MYINFO_FAILURE:
+                draft.loadMyInfoLoading = false
+                draft.loadMyInfoErr = action.err
+                break;
             case LOG_IN_REQUEST:
                 draft.logInLoading = true
                 draft.logInDone = false

@@ -1,43 +1,44 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
-const { User, Post } = require('../models')
+const { User, Post, Image, Comment } = require('../models')
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares')
 const passport = require('passport');
 const db = require('../models');
 
 const router = express.Router();
 
-router.get('/login', async (req, res, next) => {
+router.get('/', async (req, res, next) => { // GET /user
+    console.log(req.headers)
     try {
         if (req.user) {
-            const user = await User.findOne({
+            const fullUserWithoutPassword = await User.findOne({
                 where: { id: req.user.id },
                 attributes: {
                     exclude: ['password']
                 },
                 include: [{
                     model: Post,
-                    attributes: ['id']
+                    attributes: ['id'],
                 }, {
                     model: User,
                     as: 'Followings',
-                    attributes: ['id']
+                    attributes: ['id'],
                 }, {
                     model: User,
                     as: 'Followers',
-                    attributes: ['id']
+                    attributes: ['id'],
                 }]
             })
-            res.status(200).json(user);
+            res.status(200).json(fullUserWithoutPassword);
         } else {
             res.status(200).json(null);
         }
     } catch (error) {
-        console.error(error)
-        next(error)
+        console.dir(error) 
+        console.error(error);
+        next(error);
     }
-
-})
+});
 
 router.post('/login', isNotLoggedIn, (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
@@ -104,7 +105,6 @@ router.post('/', isNotLoggedIn, async (req, res, next) => {
 
 router.patch('/nickname', isLoggedIn, async (req, res, next) => {
     try {
-        console.log(req.body)
         await User.update({
             nickname: req.body.nickname
         }, {
@@ -135,7 +135,7 @@ router.delete('/:userId/follow', isLoggedIn, async (req, res, next) => { // 유�
     try {
         const user = await User.findOne({ where: { id: req.params.userId } })
         if (!user) {
-            res.status(403).send ('없는 유저입니다.')
+            res.status(403).send('없는 유저입니다.')
         }
         await user.removeFollowers(req.user.id);
         res.status(200).json({ userId: parseInt(req.params.userId, 10) })
@@ -149,7 +149,7 @@ router.delete('/:userId/following', isLoggedIn, async (req, res, next) => { // �
     try {
         const user = await User.findOne({ where: { id: req.params.userId } })
         if (!user) {
-            res.status(403).send ('없는 유저입니다.')
+            res.status(403).send('없는 유저입니다.')
         }
         await user.removeFollowings(req.user.id);
         res.status(200).json({ userId: parseInt(req.params.userId, 10) })
@@ -159,7 +159,7 @@ router.delete('/:userId/following', isLoggedIn, async (req, res, next) => { // �
     }
 })
 
-router.get('/follower', isLoggedIn, async (req, res, next) => { 
+router.get('/follower', isLoggedIn, async (req, res, next) => {
     try {
         const user = await User.findOne({ where: { id: req.user.id } })
         if (!user) {
@@ -173,31 +173,11 @@ router.get('/follower', isLoggedIn, async (req, res, next) => {
     }
 })
 
-router.get('/following', isLoggedIn, async (req, res, next) => { 
+router.get('/following', isLoggedIn, async (req, res, next) => {
     try {
         const user = await User.findOne({ where: { id: req.user.id } })
         if (!user) {
             res.status(403).send('없는 유저입니다.')
-        }
-        const followings = await user.getFollowings();
-        res.status(200).json(followings)
-    } catch (error) {
-        console.log(error)
-        next(error)
-    }
-})
-
-router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => { 
-    try {
-        const post = await Post.findOne({ 
-            where: { id: req.params.id },
-            include: [{
-                model: Post,
-                as: 'Retweet',
-            }]
-        })
-        if (!post) {
-            res.status(403).send('존재하지 않은 게시글 입니다.')
         }
         const followings = await user.getFollowings();
         res.status(200).json(followings)
