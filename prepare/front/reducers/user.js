@@ -35,6 +35,7 @@ export const initialState = {
     removefollowerDone: false,
     removefollowerErr: null,
     me: null,
+    userInfo: null,
 }
 
 //액션 타입 변수 선언
@@ -114,158 +115,192 @@ const reducer = (state = initialState, action) => {
                 draft.loadMyInfoDone = false
                 draft.loadMyInfoErr = null
                 break;
+                
             case LOAD_MYINFO_SUCCESSS:
                 draft.loadMyInfoLoading = false
                 draft.loadMyInfoDone = true
                 draft.me = action.data
                 break;
+                
             case LOAD_MYINFO_FAILURE:
                 draft.loadMyInfoLoading = false
                 draft.loadMyInfoErr = action.err
                 break;
+
             case LOG_IN_REQUEST:
                 draft.logInLoading = true
                 draft.logInDone = false
                 draft.logInErr = null
                 break;
+
             case LOG_IN_SUCCESS:
                 draft.logInLoading = false
                 draft.logInDone = true
                 draft.me = action.data
                 break;
+
             case LOG_IN_FAILURE:
                 draft.logInLoading = false
                 draft.logInErr = action.error
                 break;
+                
             case LOG_OUT_REQUEST:
                 draft.logOutLoading = true
                 draft.logOutDone = false
                 draft.logOutErr = null
                 break;
+
             case LOG_OUT_SUCCESS:
                 draft.logOutLoading = false
                 draft.logOutDone = true
                 draft.me = null
                 break;
+
             case LOG_OUT_FAILURE:
                 draft.logOutLoading = false
                 draft.logOutErr = action.error
                 break;
+
             case LOAD_USER_REQUEST:
                 draft.loadUserLoading = true
                 draft.loadUserDone = false
                 draft.loadUserErr = null
                 break;
+
             case LOAD_USER_SUCCESSS:
                 draft.loadUserLoading = false
                 draft.loadUserDone = true
-                draft.me = action.data
+                draft.userInfo = action.data
                 break;
+
             case LOAD_USER_FAILURE:
                 draft.loadUserLoading = false
                 draft.loadUserErr = action.error
                 break;
+
             case SIGN_UP_REQUEST:
                 draft.signUpLoading = true
                 draft.signUpDone = false
                 draft.signUpErr = null
                 break;
+
             case SIGN_UP_SUCCESS:
                 draft.signUpLoading = false
                 draft.signUpDone = true
                 break;
+
             case SIGN_UP_FAILURE:
                 draft.signUpLoading = false
                 draft.signUpErr = action.error
                 break;
+
             case CHANGE_NICK_REQUEST:
                 draft.changeNickLoading = true
                 draft.changeNickDone = false
                 draft.changeNickErr = null
                 break;
+
             case CHANGE_NICK_SUCCESS:
                 draft.changeNickLoading = false
                 draft.changeNickDone = true
                 draft.me.nickname = action.data.nickname
                 break;
+
             case CHANGE_NICK_FAILURE:
                 draft.changeNickLoading = false
                 draft.changeNickErr = action.error
                 break;
+
             case FOLLOW_REQUEST:
                 draft.followingLoading = true
                 draft.followingDone = false
                 draft.followingErr = null
                 break;
+
             case FOLLOW_SUCCESS:
                 draft.followingLoading = false
                 draft.followingDone = true
                 draft.me.Followings.push({ id: action.data.userId })
                 break;
+
             case FOLLOW_FAILURE:
                 draft.followingLoading = false
                 draft.followingDone = action.error
                 break;
+
             case UNFOLLOW_REQUEST:
                 draft.unfollowingLoading = true
                 draft.unfollowingDone = false
                 draft.unfollowingErr = null
                 break;
+
             case UNFOLLOW_SUCCESS:
                 draft.unfollowingLoading = false
                 draft.unfollowingDone = true
                 draft.me.Followings = draft.me.Followings.filter((item) => item.id !== action.data.userId)
                 break;
+
             case UNFOLLOW_FAILURE:
                 draft.unfollowingLoading = false
                 draft.unfollowingErr = action.error
                 break;
+
             case LOAD_FOLLOWER_REQUEST:
                 draft.loadfollowLoading = true
                 draft.loadfollowDone = false
                 draft.loadfollowErr = null
                 break;
+
             case LOAD_FOLLOWER_SUCCESS:
                 draft.loadfollowLoading = false
                 draft.loadfollowDone = true
                 draft.me.Followers = action.data
                 break;
+
             case LOAD_FOLLOWER_FAILURE:
                 draft.loadfollowLoading = false
                 draft.loadfollowErr = action.err
                 break;
+
             case REMOVE_FOLLOWER_REQUEST:
                 draft.removefollowerLoading = true
                 draft.removefollowerDone = false
                 draft.removefollowerErr = null
                 break;
+
             case REMOVE_FOLLOWER_SUCCESS:
                 draft.removefollowerLoading = false
                 draft.removefollowerDone = true
                 draft.me.Followers = draft.me.Followers.filter((item)=> item.id !== action.data.userId)
                 break;
+
             case REMOVE_FOLLOWER_FAILURE:
                 draft.removefollowerLoading = false
                 draft.removefollowerErr = action.err
                 break;
+
             case LOAD_FOLLWING_REQUEST:
                 draft.loadfollowingLoading = true
                 draft.loadfollowingDone = false
                 draft.loadfollowingErr = null
                 break;
+
             case LOAD_FOLLWING_SUCESSS:
                 draft.loadfollowingLoading = false
                 draft.loadfollowingDone = true
                 draft.me.Followings = action.data
                 break;
+
             case LOAD_FOLLWING_FAILURE:
                 draft.loadfollowingLoading = false
                 draft.loadfollowingErr = action.err
                 break;
+
             case ADD_POST_TO_ME:
                 console.log(action.data)
                 draft.me.Posts.unshift({ id: action.data })
                 break;
+
             case REMOVE_POST_TO_ME:
                 console.log(action.data)
                 draft.me.Posts = draft.me.Posts.filter((item) => item.id !== action.data)

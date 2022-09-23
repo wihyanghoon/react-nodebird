@@ -60,7 +60,7 @@ function getUserAPI(data) {
     return axios.get(`/user/${data}`)
 }
 
-function* getUser() {
+function* getUser(action) {
     try {
         const result = yield call(getUserAPI, action.data)
         yield put({

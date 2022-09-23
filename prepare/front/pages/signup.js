@@ -5,8 +5,10 @@ import Router from 'next/router'
 import AppLayout from '../components/AppLayout';
 import useInput from '../hooks/useInput';
 import { useDispatch, useSelector } from 'react-redux';
-import { SIGN_UP_REQUEST } from '../reducers/user';
-
+import { SIGN_UP_REQUEST, LOAD_MYINFO_REQUEST } from '../reducers/user';
+import wrapper from '../store/configureStore';
+import { END } from 'redux-saga';
+import axios from 'axios';
 const TextInput = ({ value }) => {
   return (
     <div>{value}</div>
@@ -113,5 +115,18 @@ const Signup = () => {
     </AppLayout>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  const cookie = context.req ? context.req.headers.cookie : "";
+  axios.defaults.headers.Cookie = ""
+  if (context.req && cookie) {
+    axios.defaults.headers.Cookie = cookie
+  }
+  context.store.dispatch({
+    type: LOAD_MYINFO_REQUEST,
+  });
+  context.store.dispatch(END);
+  await context.store.sagaTask.toPromise();
+})
 
 export default Signup;

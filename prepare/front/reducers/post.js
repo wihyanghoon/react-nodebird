@@ -10,6 +10,9 @@ export const initialState = {
     loadPostsLoading: false,
     loadPostsDone: false,
     loadPostsError: null,
+    loadPostLoading: false,
+    loadPostDone: false,
+    loadPostError: null,
     likeLoading: false,
     likeDone: false,
     likeError: null,
@@ -31,6 +34,7 @@ export const initialState = {
     retweetLoadding: false,
     retweetDone: false,
     retweetErr: null,
+    singlePost: null,
 }
 
 
@@ -53,6 +57,10 @@ export const initialState = {
 //     }],
 // }))
 export const REMOVE_IMAGES_SUCSESS = 'REMOVE_IMAGES_SUCSESS';
+
+export const LOAD_POST_REQUEST = 'LOAD_POSTS_REQUEST';
+export const LOAD_POST_SUCCESS = 'LOAD_POSTS_SUCCESS';
+export const LOAD_POST_FAILURE = 'LOAD_POSTS_FAILURE';
 
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
@@ -108,52 +116,76 @@ const reducer = (state = initialState, action) => {
                 draft.retweetDone = false
                 draft.retweetErr = null
                 break;
+
             case RETWEET_SUCCESS:
                 draft.retweetLoadding = false
                 draft.retweetDone = true
                 draft.mainPosts.unshift(action.data)
                 break;
+
             case RETWEET_FAILURE:
                 draft.retweetLoadding = false
                 draft.retweetErr = action.err
                 break;
+
             case REMOVE_IMAGES_SUCSESS:
                 console.log(action.data)
                 draft.imagePath = draft.imagePath.filter((item, index) => index !== action.data)
                 break;
+
             case LOAD_POSTS_REQUEST:
                 draft.loadPostsLoading = true;
                 draft.loadPostsDone = false;
                 draft.loadPostsError = null;
                 break;
+
             case LOAD_POSTS_SUCCESS:
                 draft.loadPostsLoading = false;
                 draft.loadPostsDone = true;
                 draft.mainPosts = draft.mainPosts.concat(action.data);
                 draft.hasMorePosts = draft.mainPosts.length === 10;
                 break;
+
             case LOAD_POSTS_FAILURE:
                 draft.loadPostsLoading = false;
                 draft.loadPostsError = action.error;
+                break;
+
+            case LOAD_POST_REQUEST:
+                draft.loadPostLoading = true;
+                draft.loadPostDone = false;
+                draft.loadPostError = null;
+                break;
+
+            case LOAD_POST_SUCCESS:
+                draft.loadPostLoading = false;
+                draft.loadPostDone = true;
+                draft.singlePost = action.data;
+                break;
+
+            case LOAD_POST_FAILURE:
+                draft.loadPostLoading = false;
+                draft.loadPostError = action.error;
                 break;
 
             case ADD_POST_REQUEST:
                 draft.addPostLoadding = true
                 draft.addPostDone = false
                 draft.addPostErr = null
-
                 break;
+
             case ADD_POST_SUCCESS:
                 draft.addPostLoadding = false
                 draft.addPostDone = true
                 draft.mainPosts.unshift(action.data)
                 draft.imagePath = []
                 break;
+
             case ADD_POST_FAILURE:
                 draft.addPostLoadding = false
                 draft.addPostErr = action.err
-
                 break;
+
             case REMOVE_POST_REQUEST:
                 draft.removePostLoadding = true
                 draft.removePostDone = false
@@ -180,7 +212,6 @@ const reducer = (state = initialState, action) => {
             case ADD_COMMENT_SUCCESS:
                 const post = draft.mainPosts.find((item) => { return item.id === action.data.PostId })
                 post.Comments.unshift(action.data)
-
                 draft.addCommentLoadding = false
                 draft.addCommentDone = true
                 break;
@@ -188,6 +219,7 @@ const reducer = (state = initialState, action) => {
             case ADD_COMMENT_FAILURE:
                 draft.addCommentLoadding = false
                 draft.addCommentErr = action.error
+                break;
 
             case LIKE_POST_REQUEST:
                 draft.likeLoading = true
@@ -199,12 +231,13 @@ const reducer = (state = initialState, action) => {
                 draft.likeLoading = false
                 draft.likeDone = true
                 const post = draft.mainPosts.find((item) => item.id === action.data.PostId)
-                post.Likers.push({id: action.data.UserId})
+                post.Likers.push({ id: action.data.UserId })
                 break;
             }
             case LIKE_POST_FAILURE:
                 draft.unLikeLoading = false
                 draft.unLikeError = true
+                break;
 
             case UNLIKE_POST_REQUEST:
                 draft.unLikeLoading = true
@@ -223,16 +256,19 @@ const reducer = (state = initialState, action) => {
                 draft.unLikeLoading = false
                 draft.unLikeDone = true
                 break;
-            case  UPLOAD_IMAGES_REQUEST:
+
+            case UPLOAD_IMAGES_REQUEST:
                 draft.upLoadImagesLoadding = true
                 draft.upLoadImagesDone = false
                 draft.upLoadImagesErr = null
                 break;
+
             case UPLOAD_IMAGES_SUCCESS:
                 draft.upLoadImagesLoadding = true
                 draft.upLoadImagesDone = false
                 draft.imagePath = action.data
                 break;
+
             case UPLOAD_IMAGES_FAILURE:
                 draft.upLoadImagesLoadding = false
                 draft.upLoadImagesErr = action.error

@@ -7,7 +7,8 @@ import {
     LIKE_POST_REQUEST, LIKE_POST_SUCCESS, LIKE_POST_FAILURE,
     UNLIKE_POST_REQUEST, UNLIKE_POST_SUCCESS, UNLIKE_POST_FAILURE,
     UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE,
-    RETWEET_REQUEST,RETWEET_SUCCESS,RETWEET_FAILURE
+    RETWEET_REQUEST,RETWEET_SUCCESS,RETWEET_FAILURE,
+    LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE
 } from '../reducers/post'
 
 import { ADD_POST_TO_ME, REMOVE_POST_TO_ME } from "../reducers/user";
@@ -104,6 +105,27 @@ function* loadPosts(action) {
     }
 }
 
+function loadPostAPI(data) {
+    return axios.get(`/post/${data}`);
+}
+
+function* loadPost(action) {
+    try {
+        const result = yield call(loadPostAPI, action.data);
+
+        yield put({
+            type: LOAD_POST_SUCCESS,
+            data: result.data,
+        });
+    } catch (err) {
+        console.error(err);
+        yield put({
+            type: LOAD_POST_FAILURE,
+            error: err.response.data,
+        });
+    }
+}
+
 function likePostAPI(data) {
     return axios.patch(`/post/${data}/like `, data);
 }
@@ -188,6 +210,10 @@ function* watchLoadPosts() {
     yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
 }
 
+function* watchLoadPost() {
+    yield takeLatest(LOAD_POST_REQUEST, loadPost);
+}
+
 function* watchAddPost() {
     yield takeLatest(ADD_POST_REQUEST, addPost)
 }
@@ -223,6 +249,7 @@ export default function* postSaga() {
         fork(watchCommentPost),
         fork(watchRemovePost),
         fork(watchLoadPosts),
+        fork(watchLoadPost),
         fork(watchLikePost),
         fork(watchUnLiketPost),
         fork(watchUpLoadImages),
