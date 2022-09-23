@@ -7,6 +7,9 @@ export const initialState = {
     mainPosts: [],
     imagePath: [],
     hasMorePosts: true,
+    loadPostLoading: false,
+    loadPostDone: false,
+    loadPostError: null,
     loadPostsLoading: false,
     loadPostsDone: false,
     loadPostsError: null,
@@ -34,7 +37,11 @@ export const initialState = {
     retweetLoadding: false,
     retweetDone: false,
     retweetErr: null,
+<<<<<<< HEAD
     singlePost: null,
+=======
+    singlePost: [],
+>>>>>>> master
 }
 
 
@@ -58,9 +65,15 @@ export const initialState = {
 // }))
 export const REMOVE_IMAGES_SUCSESS = 'REMOVE_IMAGES_SUCSESS';
 
+<<<<<<< HEAD
 export const LOAD_POST_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POST_SUCCESS = 'LOAD_POSTS_SUCCESS';
 export const LOAD_POST_FAILURE = 'LOAD_POSTS_FAILURE';
+=======
+export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
+export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS';
+export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE';
+>>>>>>> master
 
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
@@ -220,7 +233,10 @@ const reducer = (state = initialState, action) => {
                 draft.addCommentLoadding = false
                 draft.addCommentErr = action.error
                 break;
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
             case LIKE_POST_REQUEST:
                 draft.likeLoading = true
                 draft.likeDone = false
@@ -256,7 +272,10 @@ const reducer = (state = initialState, action) => {
                 draft.unLikeLoading = false
                 draft.unLikeDone = true
                 break;
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
             case UPLOAD_IMAGES_REQUEST:
                 draft.upLoadImagesLoadding = true
                 draft.upLoadImagesDone = false
