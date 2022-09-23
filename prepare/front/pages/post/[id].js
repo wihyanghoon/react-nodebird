@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { END } from 'redux-saga';
 
 import axios from 'axios';
-import { LOAD_DETAIL_REQUEST } from '../../reducers/post';
+import { LOAD_POST_REQUEST } from '../../reducers/post';
 import wrapper from '../../store/configureStore';
 import PostCard from '../../components/PostCard';
 import AppLayout from '../../components/AppLayout';
@@ -19,10 +19,12 @@ const Post = () => {
     //   return <div>Loading...</div>
     // }
 
+
     return (
         <AppLayout>
-            <PostCard post={ singlePost }></PostCard>
+            {singlePost===null ? <div>게시물이 없습니다.</div> : <PostCard post={singlePost}></PostCard>}
         </AppLayout>
+       
     );
 };
 
@@ -37,7 +39,7 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
         type: LOAD_MYINFO_REQUEST,
     });
     context.store.dispatch({
-        type: LOAD_DETAIL_REQUEST,
+        type: LOAD_POST_REQUEST,
         data: context.params.id,
     });
     context.store.dispatch(END);
