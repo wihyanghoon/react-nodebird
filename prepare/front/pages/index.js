@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { END } from 'redux-saga'
 import AppLayout from '../components/AppLayout'
 import PostForm from '../components/PostForm'
 import PostCard from '../components/PostCard'
 import { LOAD_POSTS_REQUEST } from '../reducers/post'
 import { LOAD_MYINFO_REQUEST } from '../reducers/user'
-import { END } from 'redux-saga'
 import wrapper from '../store/configureStore'
 import axios from 'axios'
 
@@ -47,19 +47,10 @@ const Home = () => {
 }
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-<<<<<<< HEAD
   const cookie = context.req ? context.req.headers.cookie : "";
   axios.defaults.headers.Cookie = ""
   if (context.req && cookie) {
     axios.defaults.headers.Cookie = cookie
-=======
-  console.log('getServerSideProps start');
-  console.log(context.req.headers);
-  const cookie = context.req ? context.req.headers.cookie : '';
-  axios.defaults.headers.Cookie = '';
-  if (context.req && cookie) {
-    axios.defaults.headers.Cookie = cookie;
->>>>>>> master
   }
   context.store.dispatch({
     type: LOAD_MYINFO_REQUEST,
@@ -68,8 +59,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
     type: LOAD_POSTS_REQUEST,
   });
   context.store.dispatch(END);
-  console.log('getServerSideProps end');
   await context.store.sagaTask.toPromise();
-});
-
+})
 export default Home

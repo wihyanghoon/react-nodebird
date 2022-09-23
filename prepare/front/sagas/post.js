@@ -100,28 +100,6 @@ function* loadPosts(action) {
         console.error(err);
         yield put({
             type: LOAD_POSTS_FAILURE,
-            error: err.response.data,
-        });
-    }
-}
-
-function loadPostAPI(data) {
-    return axios.get(`/post/${data}`);
-}
-
-function* loadPost(action) {
-    console.log(action.data)
-    try {
-        const result = yield call(loadPostAPI, action.data);
-
-        yield put({
-            type: LOAD_POST_SUCCESS,
-            data: result.data,
-        });
-    } catch (err) {
-        console.error(err);
-        yield put({
-            type: LOAD_POST_FAILURE,
             data: err.response.data,
         });
     }
