@@ -5,7 +5,9 @@ import Router from 'next/router'
 import AppLayout from '../components/AppLayout';
 import useInput from '../hooks/useInput';
 import { useDispatch, useSelector } from 'react-redux';
-import { SIGN_UP_REQUEST } from '../reducers/user';
+import axios from 'axios';
+import { END } from 'redux-saga';
+import { SIGN_UP_REQUEST, LOAD_MYINFO_REQUEST } from '../reducers/user';
 
 const TextInput = ({ value }) => {
   return (
@@ -42,7 +44,7 @@ const Signup = () => {
   }, [signUpErr])
 
   useEffect(() => {
-    if((me && me.id)){
+    if ((me && me.id)) {
       Router.replace('/')
     }
   }, [me && me.id])
@@ -113,5 +115,21 @@ const Signup = () => {
     </AppLayout>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  console.log('getServerSideProps start');
+  console.log(context.req.headers);
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+  if (context.req && cookie) {
+    axios.defaults.headers.Cookie = cookie;
+  }
+  context.store.dispatch({
+    type: LOAD_MYINFO_REQUEST,
+  });
+  context.store.dispatch(END);
+  console.log('getServerSideProps end');
+  await context.store.sagaTask.toPromise();
+});
 
 export default Signup;
