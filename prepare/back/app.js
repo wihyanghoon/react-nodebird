@@ -16,7 +16,7 @@ const dotenv = require('dotenv');
 const path = require('path')
 
 dotenv.config();
-
+//시퀄라이저
 db.sequelize.sync()
     .then(() => {
         console.log('db 연결성공')
